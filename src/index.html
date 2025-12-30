@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AniList Wrapped | Cinematic Archive</title>
+    <meta name="description" content="A cinematic journey through your anime and manga year.">
+    
+    <!-- Tailwind -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#050505',
+                        secondary: '#111111',
+                    },
+                    fontFamily: {
+                        display: ['"Playfair Display"', 'serif'],
+                        mono: ['"JetBrains Mono"', 'monospace'],
+                        sans: ['"Inter"', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="bg-primary text-white overflow-x-hidden selection:bg-purple-500 selection:text-white">
+
+    <div class="noise-overlay"></div>
+
+    <!-- Entry Gate / Form -->
+    <div id="entryGate" class="fixed inset-0 z-50 flex items-center justify-center bg-primary transition-opacity duration-1000">
+        <div class="w-full max-w-lg p-8 relative">
+            <div class="absolute -top-20 -left-20 w-64 h-64 bg-purple-900 rounded-full blur-[100px] opacity-20"></div>
+            <div class="absolute -bottom-20 -right-20 w-64 h-64 bg-red-900 rounded-full blur-[100px] opacity-20"></div>
+            
+            <div class="entry-terminal p-8 rounded-lg relative z-10">
+                <h1 class="font-display text-4xl mb-2">Identify.</h1>
+                <p class="font-mono text-gray-400 text-sm mb-8">ENTER YOUR ANILIST CREDENTIALS TO RETRIEVE MEMORY FRAGMENTS.</p>
+                
+                <form id="userForm" class="space-y-8">
+                    <div>
+                        <input type="text" id="username" class="input-minimal" placeholder="USERNAME" required autocomplete="off">
+                    </div>
+                    <div class="flex gap-4">
+                        <input type="number" id="year" class="input-minimal w-1/3" placeholder="YEAR" min="2000" max="2025" value="2025">
+                    </div>
+                    <button type="submit" class="group flex items-center gap-4 text-lg font-mono hover:text-purple-400 transition-colors mt-8">
+                        <span>INITIATE_SEQUENCE</span>
+                        <span class="group-hover:translate-x-2 transition-transform">-></span>
+                    </button>
+                </form>
+                
+                <div id="loadingState" class="hidden mt-8">
+                    <div class="font-mono text-xs text-purple-400 animate-pulse">
+                        > CONNECTING TO NEURAL LINK...<br>
+                        > PARSING MEMORY STREAMS...<br>
+                        > RECONSTRUCTING TIMELINE...
+                    </div>
+                </div>
+                
+                 <div id="errorState" class="hidden mt-4 text-red-500 font-mono text-sm"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Experience Container -->
+    <main id="cinematicContainer" class="opacity-0 transition-opacity duration-1000 ease-in-out">
+        <!-- Content injected by JS -->
+    </main>
+
+    <script src="js/app.js"></script>
+</body>
+</html>
