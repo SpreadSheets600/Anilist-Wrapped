@@ -2,7 +2,7 @@ class App {
     constructor() {
         this.api = window.location.hostname === 'localhost' 
             ? 'http://localhost:8000/api' 
-            : '/api';
+            : '/api'; // This now redirects to /.netlify/functions/api
             
         this.data = null;
         

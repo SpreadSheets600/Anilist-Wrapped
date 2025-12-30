@@ -3,11 +3,10 @@
   publish = "src"
 
 [functions]
-  directory = "."
-  included_files = ["data/**", "rewind.py"]
+  external_node_modules = [] # Fix for some build quirks, empty is fine
 
 [[redirects]]
   from = "/api/*"
-  to = "/.netlify/functions/main"
+  to = "/.netlify/functions/api"
   status = 200
   force = true

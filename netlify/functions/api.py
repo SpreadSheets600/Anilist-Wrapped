@@ -1,12 +1,21 @@
-from fastapi import FastAPI, Query
+from fastapi import FastAPI, Query, Response
 from fastapi.middleware.cors import CORSMiddleware
 from datetime import datetime
 import hashlib
+import httpx
 
-from data.anime import fetch_anime
-from data.manga import fetch_manga
-from data.favorites import fetch_favorites
-from rewind import build_rewind
+# Fix imports since we moved files
+try:
+    from .data.anime import fetch_anime
+    from .data.manga import fetch_manga
+    from .data.favorites import fetch_favorites
+    from .rewind import build_rewind
+except ImportError:
+    # Fallback for local dev if not running as module
+    from data.anime import fetch_anime
+    from data.manga import fetch_manga
+    from data.favorites import fetch_favorites
+    from rewind import build_rewind
 
 app = FastAPI(title="AniList Unified Rewind")
 
@@ -51,19 +60,15 @@ async def api_share(shareId: str = Query(...)):
         return {"error": "Share not found"}
     return share_cache[shareId]
 
-import httpx
-from fastapi.responses import StreamingResponse
-
 @app.get("/api/proxy")
 async def proxy_image(url: str):
-    client = httpx.AsyncClient()
-    req = client.build_request("GET", url)
-    r = await client.send(req, stream=True)
-    return StreamingResponse(
-        r.aiter_bytes(), 
-        media_type=r.headers.get("content-type"),
-        headers={"Access-Control-Allow-Origin": "*"}
-    )
+    async with httpx.AsyncClient() as client:
+        resp = await client.get(url)
+        return Response(
+            content=resp.content,
+            media_type=resp.headers.get("content-type"),
+            headers={"Access-Control-Allow-Origin": "*"}
+        )
 
 from mangum import Mangum
 handler = Mangum(app)
