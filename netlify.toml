@@ -1,0 +1,14 @@
+[build]
+  command = "echo 'No build command for backend needed'"
+  publish = "src"
+
+[dev]
+  command = "uvicorn main:app --reload"
+  port = 8000
+  publish = "src"
+
+[[redirects]]
+  from = "/api/*"
+  to = "http://localhost:8000/api/:splat"
+  status = 200
+  force = true
