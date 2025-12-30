@@ -10,13 +10,21 @@ query ($username: String) {
         score
         progress
         repeat
+        status
+        updatedAt
         completedAt { year month }
         media {
           title { romaji }
           duration
+          format
           genres
           bannerImage
           coverImage { large }
+          studios(isMain: true) {
+            nodes {
+              name
+            }
+          }
         }
       }
     }
