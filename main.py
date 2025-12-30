@@ -5,6 +5,7 @@ import hashlib
 
 from data.anime import fetch_anime
 from data.manga import fetch_manga
+from data.favorites import fetch_favorites
 from rewind import build_rewind
 
 app = FastAPI(title="AniList Unified Rewind")
@@ -29,7 +30,9 @@ async def api_rewind(username: str = Query(...), year: int = Query(None)):
     
     anime = await fetch_anime(username)
     manga = await fetch_manga(username)
-    result = build_rewind(anime, manga, year)
+    favorites = await fetch_favorites(username)
+    
+    result = build_rewind(anime, manga, favorites, year)
     
     # Generate share ID
     share_id = hashlib.md5(f"{username}-{year}-{datetime.now()}".encode()).hexdigest()[:8]
@@ -47,3 +50,17 @@ async def api_share(shareId: str = Query(...)):
     if shareId not in share_cache:
         return {"error": "Share not found"}
     return share_cache[shareId]
+
+import httpx
+from fastapi.responses import StreamingResponse
+
+@app.get("/api/proxy")
+async def proxy_image(url: str):
+    client = httpx.AsyncClient()
+    req = client.build_request("GET", url)
+    r = await client.send(req, stream=True)
+    return StreamingResponse(
+        r.aiter_bytes(), 
+        media_type=r.headers.get("content-type"),
+        headers={"Access-Control-Allow-Origin": "*"}
+    )
