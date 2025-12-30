@@ -1,14 +1,13 @@
 [build]
-  command = "echo 'No build command for backend needed'"
+  command = "pip install -r requirements.txt"
   publish = "src"
 
-[dev]
-  command = "uvicorn main:app --reload"
-  port = 8000
-  publish = "src"
+[functions]
+  directory = "."
+  included_files = ["data/**", "rewind.py"]
 
 [[redirects]]
   from = "/api/*"
-  to = "http://localhost:8000/api/:splat"
+  to = "/.netlify/functions/main"
   status = 200
   force = true
