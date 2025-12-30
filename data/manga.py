@@ -9,9 +9,12 @@ query ($username: String) {
         progress
         progressVolumes
         repeat
+        status
+        updatedAt
         completedAt { year month }
         media {
           title { romaji }
+          countryOfOrigin
           genres
           bannerImage
           coverImage { large }
