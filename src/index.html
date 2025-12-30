@@ -3,75 +3,51 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AniList Wrapped | Cinematic Archive</title>
-    <meta name="description" content="A cinematic journey through your anime and manga year.">
+    <title>AniList Wrapped '25</title>
     
     <!-- Tailwind -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: '#050505',
-                        secondary: '#111111',
-                    },
-                    fontFamily: {
-                        display: ['"Playfair Display"', 'serif'],
-                        mono: ['"JetBrains Mono"', 'monospace'],
-                        sans: ['"Inter"', 'sans-serif'],
-                    }
-                }
-            }
-        }
-    </script>
     
+    <!-- Lenis (Smooth Scroll) -->
+    <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.29/bundled/lenis.min.js"></script> 
+    
+    <!-- GSAP -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/CustomEase.min.js"></script>
+    <script src="https://unpkg.com/split-type"></script>
+    
+    <!-- HTML2Canvas -->
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+
     <link rel="stylesheet" href="css/styles.css">
 </head>
-<body class="bg-primary text-white overflow-x-hidden selection:bg-purple-500 selection:text-white">
-
+<body class="bg-[#030303] text-white">
+    <div id="cursor-dot"></div>
+    <div id="cursor-outline"></div>
     <div class="noise-overlay"></div>
 
-    <!-- Entry Gate / Form -->
-    <div id="entryGate" class="fixed inset-0 z-50 flex items-center justify-center bg-primary transition-opacity duration-1000">
-        <div class="w-full max-w-lg p-8 relative">
-            <div class="absolute -top-20 -left-20 w-64 h-64 bg-purple-900 rounded-full blur-[100px] opacity-20"></div>
-            <div class="absolute -bottom-20 -right-20 w-64 h-64 bg-red-900 rounded-full blur-[100px] opacity-20"></div>
-            
-            <div class="entry-terminal p-8 rounded-lg relative z-10">
-                <h1 class="font-display text-4xl mb-2">Identify.</h1>
-                <p class="font-mono text-gray-400 text-sm mb-8">ENTER YOUR ANILIST CREDENTIALS TO RETRIEVE MEMORY FRAGMENTS.</p>
-                
-                <form id="userForm" class="space-y-8">
-                    <div>
-                        <input type="text" id="username" class="input-minimal" placeholder="USERNAME" required autocomplete="off">
-                    </div>
-                    <div class="flex gap-4">
-                        <input type="number" id="year" class="input-minimal w-1/3" placeholder="YEAR" min="2000" max="2025" value="2025">
-                    </div>
-                    <button type="submit" class="group flex items-center gap-4 text-lg font-mono hover:text-purple-400 transition-colors mt-8">
-                        <span>INITIATE_SEQUENCE</span>
-                        <span class="group-hover:translate-x-2 transition-transform">-></span>
-                    </button>
-                </form>
-                
-                <div id="loadingState" class="hidden mt-8">
-                    <div class="font-mono text-xs text-purple-400 animate-pulse">
-                        > CONNECTING TO NEURAL LINK...<br>
-                        > PARSING MEMORY STREAMS...<br>
-                        > RECONSTRUCTING TIMELINE...
-                    </div>
-                </div>
-                
-                 <div id="errorState" class="hidden mt-4 text-red-500 font-mono text-sm"></div>
-            </div>
+    <!-- ENTRY GATE -->
+    <div id="gate" class="fixed inset-0 z-50 bg-[#030303] flex items-center justify-center">
+        <div class="text-center space-y-8">
+            <h1 class="font-display text-5xl italic opacity-0" id="gateTitle">The Anime Archive</h1>
+            <form id="userForm" class="opacity-0">
+                <input id="username" type="text" placeholder="USERNAME" class="bg-transparent border-b border-white/30 text-center py-2 font-mono outline-none uppercase tracking-widest focus:border-white transition-colors">
+                <input id="year" type="number" value="2025" class="hidden">
+                <button type="submit" class="block mx-auto mt-8 font-mono text-xs border border-white/20 px-6 py-2 hover:bg-white hover:text-black transition-colors cursor-none hover-target">ENTER</button>
+            </form>
+            <div id="loader" class="hidden font-mono text-xs text-blue-300 animate-pulse">CONNECTING...</div>
+            <div id="error" class="hidden font-mono text-xs text-red-500"></div>
         </div>
     </div>
 
-    <!-- Main Experience Container -->
-    <main id="cinematicContainer" class="opacity-0 transition-opacity duration-1000 ease-in-out">
+    <!-- MAIN CONTENT -->
+    <main id="app" class="opacity-0">
         <!-- Content injected by JS -->
     </main>
+
+    <!-- SHARE CAPTURE ZONE -->
+    <div id="shareCardContainer"></div>
 
     <script src="js/app.js"></script>
 </body>
