@@ -3,19 +3,16 @@ from fastapi.middleware.cors import CORSMiddleware
 from datetime import datetime
 import hashlib
 import httpx
+from fastapi import FastAPI, Query, Response
+from fastapi.middleware.cors import CORSMiddleware
+from datetime import datetime
+import hashlib
+from mangum import Mangum
 
-# Fix imports since we moved files
-try:
-    from .data.anime import fetch_anime
-    from .data.manga import fetch_manga
-    from .data.favorites import fetch_favorites
-    from .rewind import build_rewind
-except ImportError:
-    # Fallback for local dev if not running as module
-    from data.anime import fetch_anime
-    from data.manga import fetch_manga
-    from data.favorites import fetch_favorites
-    from rewind import build_rewind
+from data.anime import fetch_anime
+from data.manga import fetch_manga
+from data.favorites import fetch_favorites
+from rewind import build_rewind
 
 app = FastAPI(title="AniList Unified Rewind")
 

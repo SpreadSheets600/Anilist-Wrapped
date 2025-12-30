@@ -3,7 +3,7 @@
   publish = "src"
 
 [functions]
-  external_node_modules = [] # Fix for some build quirks, empty is fine
+  directory = "functions"
 
 [[redirects]]
   from = "/api/*"
