@@ -64,3 +64,6 @@ async def proxy_image(url: str):
         media_type=r.headers.get("content-type"),
         headers={"Access-Control-Allow-Origin": "*"}
     )
+
+from mangum import Mangum
+handler = Mangum(app)
