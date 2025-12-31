@@ -1,23 +1,22 @@
 from flask import (
     Flask,
-    render_template,
-    request,
     jsonify,
+    request,
     Response,
-    send_from_directory,
     send_file,
+    render_template,
 )
 import httpx
 import hashlib
 import asyncio
-from datetime import datetime
 from io import BytesIO
+from datetime import datetime
 from flask_caching import Cache
 
 from rewind import build_rewind
-from share_card import create_share_card
 from data.anime import fetch_anime
 from data.manga import fetch_manga
+from share_card import create_share_card
 from data.favorites import fetch_favorites
 
 app = Flask(__name__)
@@ -106,18 +105,21 @@ def generate_card():
     share_id = request.args.get("shareId")
     if not share_id or share_id not in share_cache:
         return jsonify({"error": "Share not found"}), 404
-    
+
     try:
         data = share_cache[share_id]
         img = create_share_card(data)
-        
-        # Save to BytesIO
+
         img_io = BytesIO()
-        img.save(img_io, 'PNG', quality=95)
+        img.save(img_io, "PNG", quality=95)
         img_io.seek(0)
-        
-        return send_file(img_io, mimetype='image/png', as_attachment=True, 
-                        download_name=f'Wrapped-{data.get("username", "User")}-{data.get("year", 2024)}.png')
+
+        return send_file(
+            img_io,
+            mimetype="image/png",
+            as_attachment=True,
+            download_name=f"Wrapped-{data.get('username', 'User')}-{data.get('year', 2024)}.png",
+        )
     except Exception as e:
         app.logger.error(f"Error generating card: {e}")
         return jsonify({"error": str(e)}), 500

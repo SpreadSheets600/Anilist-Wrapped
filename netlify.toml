@@ -1,11 +1,8 @@
 [build]
-  command = "pip install -r requirements.txt"
-  publish = "."
+  command = "pip install -r requirements.txt && mkdir -p static"
+  publish = "static"
 
 [[redirects]]
   from = "/*"
   to = "/.netlify/functions/app/:splat"
   status = 200
-
-[functions]
-  node_bundler = "esbuild"
