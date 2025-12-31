@@ -3,3 +3,6 @@ Flask-Caching
 gunicorn
 httpx
 python-dateutil
+Pillow
+requests
+serverless-wsgi
