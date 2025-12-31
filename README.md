@@ -8,44 +8,30 @@ A modern, shareable AniList Wrapped experience that generates beautiful visualiz
 - 📱 Mobile-friendly interface
 - 🔗 Shareable links for your wrapped data
 - ⚡ Caching for improved performance
-- 🌐 Netlify-ready deployment
 - 🎭 Beautiful typography and visual effects
+- 🖼️ Python-generated share cards with glassmorphism design
 
-## Deployment
-
-### Netlify (Recommended)
-
-1. Connect your repository to Netlify
-2. Build settings are automatically configured via `netlify.toml`
-3. Deploy!
-
-### Manual Deployment
+### Local Development
 
 ```bash
-npm run build
-# Upload dist/ folder to your hosting provider
+pip install -r requirements.txt
+
+python app.py
 ```
 
-## Development
-
-```bash
-# Start development server
-npm run dev
-```
+Visit <http://localhost:8000>
 
 ## API Endpoints
 
 - `/api/rewind?username={username}&year={year}` - Generate wrapped data
+- `/api/generate-card?shareId={shareId}` - Generate share card image
 - `/api/share?shareId={shareId}` - Get shared wrapped data
 
 ## Tech Stack
 
-- Vanilla JavaScript (ES6+)
-- Modern CSS with custom properties
-- Netlify Functions for serverless backend
 - AniList GraphQL API
+- Flask (Python backend)
+- Vanilla JavaScript (ES6+)
 - Tailwind CSS for utilities
-
-## License
-
-MIT
+- Pillow (Share card generation)
+- Modern CSS with custom properties
