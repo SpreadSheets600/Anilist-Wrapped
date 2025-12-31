@@ -14,7 +14,7 @@ query ($username: String) {
         updatedAt
         completedAt { year month }
         media {
-          title { romaji }
+          title { english }
           duration
           format
           genres

@@ -79,7 +79,7 @@ def build_rewind(anime_data, manga_data, favorites_data, year: int):
                 ongoing["anime"].append(
                     {
                         "title": media["title"].get("english")
-                        or media["title"]["romaji"],
+                        or media["title"]["english"],
                         "cover_image": media["coverImage"]["large"],
                         "progress": e.get("progress") or 0,
                         "score": e["score"],
@@ -110,7 +110,7 @@ def build_rewind(anime_data, manga_data, favorites_data, year: int):
                 overall["studios"][s["name"]] += 1
 
             anime_obj = {
-                "title": media["title"].get("english") or media["title"]["romaji"],
+                "title": media["title"].get("english") or media["title"]["english"],
                 "score": e["score"],
                 "cover_image": media["coverImage"]["large"],
                 "banner_image": media["bannerImage"],
@@ -133,7 +133,7 @@ def build_rewind(anime_data, manga_data, favorites_data, year: int):
                 ongoing["manga"].append(
                     {
                         "title": media["title"].get("english")
-                        or media["title"]["romaji"],
+                        or media["title"]["english"],
                         "cover_image": media["coverImage"]["large"],
                         "progress": e.get("progress") or 0,
                         "score": e["score"],
@@ -158,7 +158,7 @@ def build_rewind(anime_data, manga_data, favorites_data, year: int):
             overall["countries"][origin] += 1
 
             manga_obj = {
-                "title": media["title"].get("english") or media["title"]["romaji"],
+                "title": media["title"].get("english") or media["title"]["english"],
                 "score": e["score"],
                 "cover_image": media["coverImage"]["large"],
                 "banner_image": media["bannerImage"],

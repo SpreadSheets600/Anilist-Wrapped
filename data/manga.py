@@ -13,7 +13,7 @@ query ($username: String) {
         updatedAt
         completedAt { year month }
         media {
-          title { romaji }
+          title { english }
           countryOfOrigin
           genres
           bannerImage
