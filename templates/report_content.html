@@ -1,0 +1,378 @@
+<style>
+	@keyframes fadeInUp {
+		from {
+			opacity: 0;
+			transform: translateY(30px);
+		}
+		to {
+			opacity: 1;
+			transform: translateY(0);
+		}
+	}
+
+	@keyframes fadeIn {
+		from {
+			opacity: 0;
+		}
+		to {
+			opacity: 1;
+		}
+	}
+
+	.cinematic-fade {
+		animation: fadeIn 1s ease-out forwards;
+	}
+
+	@media (max-width: 768px) {
+		.card-3d-wrapper {
+			max-width: 280px !important;
+		}
+
+		.perspective-1000 {
+			min-width: auto !important;
+			width: 100% !important;
+		}
+	}
+</style>
+
+{% macro stat_item(value, label) %}
+<div class="text-center">
+	<div class="font-display text-4xl md:text-6xl font-bold tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white to-gray-600">{{ value }}</div>
+	<div class="font-mono text-xs md:text-sm text-accent tracking-widest mt-2 border-t border-white/10 inline-block pt-2 px-4">{{ label }}</div>
+</div>
+{% endmacro %} {% macro card_3d(item, label, rank=None) %} {% if item %}
+<div class="card-3d-wrapper w-full max-w-[320px] md:max-w-[360px] aspect-[2/3] mx-auto hover-target group perspective-1000">
+	<div class="card-3d relative w-full h-full rounded-[2rem] overflow-hidden shadow-2xl bg-[#0a0a0a] border border-white/10 transition-transform duration-300 ease-out">
+		<!-- Cover Image -->
+		<img src="{{ item.cover_image }}" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+
+		<!-- Gradient Overlay (Darker at bottom for text readability) -->
+		<div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-100 transition-opacity duration-500"></div>
+
+		<!-- Glare Effect -->
+		<div class="glare absolute inset-0 opacity-0 group-hover:opacity-30 transition-opacity duration-500 pointer-events-none mix-blend-overlay bg-gradient-to-tr from-white/0 via-white/50 to-white/0"></div>
+
+		<!-- Content -->
+		<div class="absolute inset-x-0 bottom-0 p-6 md:p-8 flex flex-col justify-end h-full z-20">
+			<!-- Top Label -->
+			<div class="absolute top-6 right-6 md:top-8 md:right-8">
+				<span class="bg-accent/10 backdrop-blur-md border border-accent/20 text-accent px-3 py-1 rounded-full text-[10px] font-mono font-bold tracking-widest uppercase shadow-lg shadow-accent/5"> {{ label }} </span>
+			</div>
+
+			<div class="space-y-3">
+				<!-- Title -->
+				<h3 class="font-display text-2xl md:text-4xl font-bold leading-[1.1] text-white drop-shadow-xl line-clamp-3">{{ item.title }}</h3>
+
+				<!-- Metadata / Micro-stats -->
+				<div class="flex items-center gap-3 text-xs font-mono text-gray-300 border-t border-white/20 pt-3">
+					{% if item.studios %}
+					<!-- Handle list of studios from rewind.py -->
+					<span class="truncate max-w-[120px] text-accent">{{ item.studios[0].name }}</span>
+					<span class="w-1 h-1 bg-gray-500 rounded-full"></span>
+					{% endif %}
+					<span class="uppercase tracking-wider">{{ item.format if item.format else 'MANGA' }}</span>
+				</div>
+
+				<!-- Score Badge -->
+				<div class="flex items-end gap-2 pt-1">
+					<div class="flex items-baseline gap-1">
+						<span class="text-4xl md:text-5xl font-bold text-white tracking-tighter shadow-black drop-shadow-lg">{{ item.score }}</span>
+						<span class="text-[10px] text-gray-400 font-mono mb-1">/100</span>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Active Border -->
+		<div class="absolute inset-0 border-2 border-accent/0 group-hover:border-accent/50 transition-colors duration-500 rounded-[2rem] pointer-events-none z-30"></div>
+	</div>
+</div>
+{% endif %} {% endmacro %} {% macro mini_card(item, type) %} {% if item %}
+<div class="w-32 md:w-48 flex-shrink-0 hover-target cursor-none group">
+	<div class="aspect-[2/3] overflow-hidden rounded-lg mb-3 bg-white/5 relative">
+		<img src="{{ item.cover_image }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+		<div class="absolute inset-0 ring-1 ring-inset ring-white/10 group-hover:ring-accent transition-all"></div>
+	</div>
+	<div class="font-bold truncate text-xs md:text-sm">{{ item.title }}</div>
+	<div class="text-[10px] text-gray-500 font-mono tracking-wider">{{ type }}</div>
+</div>
+{% endif %} {% endmacro %}
+
+<!-- HERO -->
+<section class="scroll-section h-screen items-center text-center overflow-hidden relative justify-center">
+	{% if overall.collage_covers %}
+	<div class="collage-bg">
+		{% for src in overall.collage_covers %}
+		<div class="collage-item" style="background-image: url('{{ src }}')"></div>
+		{% endfor %}
+	</div>
+	{% endif %}
+	<div class="absolute inset-0 bg-gradient-to-b from-transparent via-[#030303]/80 to-[#030303]"></div>
+	<div class="z-10 relative mix-blend-difference px-4 w-full">
+		<div class="font-mono text-xs md:text-sm tracking-[0.5em] mb-4 split-text text-accent">The Anime Archive // {{ year }}</div>
+		<h1 class="hero-title split-text break-words text-5xl md:text-9xl lg:text-[12rem] leading-none">{{ username }}</h1>
+		<div class="mt-8 font-display text-2xl md:text-5xl italic text-gray-400 split-text">{{ persona.title }}</div>
+		<p class="mt-6 font-mono text-gray-500 max-w-md mx-auto text-xs md:text-sm leading-relaxed px-4">{{ persona.description }}</p>
+	</div>
+</section>
+
+<!-- HIGHLIGHTS SECTION -->
+<section class="scroll-section bg-[#030303] py-12 md:py-24 relative overflow-hidden">
+	<!-- Background Decor -->
+	<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-gradient-radial from-white/5 to-transparent opacity-20 blur-3xl pointer-events-none"></div>
+
+	<div class="max-w-[1600px] mx-auto w-full px-6 relative z-10">
+		<!-- SECTION TITLE -->
+		<div class="text-center mb-24 md:mb-40 relative">
+			<h2 class="hero-title text-6xl md:text-[8rem] lg:text-[12rem] opacity-[0.03] font-bold select-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full pointer-events-none whitespace-nowrap">YEAR IN REVIEW</h2>
+			<h2 class="section-title text-5xl md:text-8xl relative z-10 mix-blend-difference gs-reveal-up">Highlights</h2>
+			<div class="w-px h-24 bg-gradient-to-b from-accent to-transparent mx-auto mt-8 gs-reveal-up"></div>
+		</div>
+
+		<!-- CONTENT GRID -->
+		<div class="grid grid-cols-1 xl:grid-cols-2 gap-8 md:gap-16 items-stretch">
+			<!-- ANIME BLOCK -->
+			<div class="group relative overflow-hidden rounded-[2rem] border border-white/10 gs-reveal-left">
+				<!-- Cinematic Background -->
+				<div class="absolute inset-0 z-0">
+					{% if overall.best_anime.banner_image %}
+					<img src="{{ overall.best_anime.banner_image }}" class="w-full h-full object-cover opacity-30 group-hover:opacity-40 transition-all duration-1000 blur-sm group-hover:blur-0 scale-110 group-hover:scale-105" />
+					{% elif overall.best_anime.cover_image %}
+					<img src="{{ overall.best_anime.cover_image }}" class="w-full h-full object-cover opacity-30 group-hover:opacity-40 transition-all duration-1000 blur-md group-hover:blur-sm scale-110" />
+					{% else %}
+					<div class="w-full h-full bg-gradient-to-br from-blue-900/20 to-transparent"></div>
+					{% endif %}
+					<div class="absolute inset-0 bg-gradient-to-t from-[#030303] via-[#030303]/80 to-transparent"></div>
+					<div class="absolute inset-0 bg-gradient-to-r from-[#030303]/90 to-transparent"></div>
+				</div>
+
+				<div class="relative z-10 p-8 md:p-12 flex flex-col h-full">
+					<h3 class="font-display text-4xl md:text-6xl mb-12 text-white/90 flex items-center gap-4"><span class="w-12 h-1 bg-accent block"></span> ANIME</h3>
+
+					<div class="flex flex-col md:flex-row gap-6 md:gap-12 items-center md:items-start flex-1">
+						<!-- Card -->
+						{% if overall.best_anime %}
+						<div class="perspective-1000 shrink-0 flex justify-center w-full md:w-auto" style="min-width: 280px">{{ card_3d(overall.best_anime, 'AOTY') }}</div>
+						{% endif %}
+
+						<!-- Stats -->
+						<div class="flex flex-col gap-8 w-full">
+							<div class="cinematic-fade" style="animation-delay: 0.2s; opacity: 0">
+								<div class="font-mono text-xs text-accent tracking-widest mb-1 flex items-center gap-2"><span class="w-1 h-1 bg-white rounded-full"></span> TIME LOST</div>
+								<div class="font-display text-4xl md:text-5xl font-bold">{{ '{:,}'.format(overall.minutes_watched) }}<span class="text-lg text-gray-500 ml-2 font-normal italic">min</span></div>
+							</div>
+							<div class="cinematic-fade" style="animation-delay: 0.4s; opacity: 0">
+								<div class="font-mono text-xs text-accent tracking-widest mb-1 flex items-center gap-2"><span class="w-1 h-1 bg-white rounded-full"></span> EPISODES</div>
+								<div class="font-display text-4xl md:text-5xl font-bold">{{ '{:,}'.format(overall.episodes_watched) }}</div>
+							</div>
+							<div class="cinematic-fade" style="animation-delay: 0.6s; opacity: 0">
+								<div class="font-mono text-xs text-accent tracking-widest mb-1 flex items-center gap-2"><span class="w-1 h-1 bg-white rounded-full"></span> AVG SCORE</div>
+								<div class="font-display text-4xl md:text-5xl font-bold">{{ overall.anime_avg_score if overall.anime_avg_score else '-' }}</div>
+							</div>
+							<div class="mt-auto pt-8 border-t border-white/10 cinematic-fade" style="animation-delay: 0.8s; opacity: 0">
+								<div class="font-mono text-xs text-gray-400 mb-2">MOST WATCHED GENRE</div>
+								<div class="text-2xl font-bold text-white">{{ (overall.top_genres.keys()|list)[0] if overall.top_genres else 'N/A' }}</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- MANGA BLOCK -->
+			<div class="group relative overflow-hidden rounded-[2rem] border border-white/10 gs-reveal-right">
+				<!-- Cinematic Background -->
+				<div class="absolute inset-0 z-0">
+					{% if overall.best_manga.banner_image %}
+					<img src="{{ overall.best_manga.banner_image }}" class="w-full h-full object-cover opacity-30 group-hover:opacity-40 transition-all duration-1000 blur-sm group-hover:blur-0 scale-110 group-hover:scale-105" />
+					{% elif overall.best_manga.cover_image %}
+					<img src="{{ overall.best_manga.cover_image }}" class="w-full h-full object-cover opacity-30 group-hover:opacity-40 transition-all duration-1000 blur-md group-hover:blur-sm scale-110" />
+					{% else %}
+					<div class="w-full h-full bg-gradient-to-bl from-red-900/20 to-transparent"></div>
+					{% endif %}
+					<div class="absolute inset-0 bg-gradient-to-t from-[#030303] via-[#030303]/80 to-transparent"></div>
+					<div class="absolute inset-0 bg-gradient-to-l from-[#030303]/90 to-transparent"></div>
+				</div>
+
+				<div class="relative z-10 p-8 md:p-12 flex flex-col h-full">
+					<h3 class="font-display text-4xl md:text-6xl mb-12 text-white/90 flex items-center justify-end gap-4">MANGA <span class="w-12 h-1 bg-[#ff8080] block"></span></h3>
+
+					<div class="flex flex-col md:flex-row-reverse gap-6 md:gap-12 items-center md:items-start flex-1">
+						<!-- Card -->
+						{% if overall.best_manga %}
+						<div class="perspective-1000 shrink-0 flex justify-center w-full md:w-auto" style="min-width: 280px">{{ card_3d(overall.best_manga, 'MOTY') }}</div>
+						{% endif %}
+
+						<!-- Stats -->
+						<div class="flex flex-col gap-8 w-full text-left md:text-right items-start md:items-end">
+							<div class="cinematic-fade" style="animation-delay: 0.2s; opacity: 0">
+								<div class="font-mono text-xs text-[#ff8080] tracking-widest mb-1 flex items-center gap-2 md:flex-row-reverse"><span class="w-1 h-1 bg-white rounded-full"></span> READING</div>
+								<div class="font-display text-4xl md:text-5xl font-bold">{{ '{:,}'.format(overall.chapters_read) }}<span class="text-lg text-gray-500 ml-2 font-normal italic">ch</span></div>
+							</div>
+							<div class="cinematic-fade" style="animation-delay: 0.4s; opacity: 0">
+								<div class="font-mono text-xs text-[#ff8080] tracking-widest mb-1 flex items-center gap-2 md:flex-row-reverse"><span class="w-1 h-1 bg-white rounded-full"></span> VOLUMES</div>
+								<div class="font-display text-4xl md:text-5xl font-bold">{{ '{:,}'.format(overall.volumes_read) }}</div>
+							</div>
+							<div class="cinematic-fade" style="animation-delay: 0.6s; opacity: 0">
+								<div class="font-mono text-xs text-[#ff8080] tracking-widest mb-1 flex items-center gap-2 md:flex-row-reverse"><span class="w-1 h-1 bg-white rounded-full"></span> AVG SCORE</div>
+								<div class="font-display text-4xl md:text-5xl font-bold">{{ overall.manga_avg_score if overall.manga_avg_score else '-' }}</div>
+							</div>
+							<div class="mt-auto pt-8 border-t border-white/10 w-full cinematic-fade" style="animation-delay: 0.8s; opacity: 0">
+								<div class="font-mono text-xs text-gray-400 mb-2">FAVORITE FORMAT</div>
+								<div class="text-2xl font-bold text-white">{{ (overall.formats.keys()|list)[0] if overall.formats else 'N/A' }}</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- GLOBAL STATS STRIP -->
+		<div class="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12 pt-20 mt-16 relative">
+			<div class="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
+
+			<div class="gs-reveal-up delay-100">{{ stat_item(overall.total_days_watched, 'DAYS LOST') }}</div>
+			<div class="gs-reveal-up delay-200">{{ stat_item(overall.average_score, 'OVERALL SCORE') }}</div>
+
+			<div class="text-center gs-reveal-up delay-300">
+				<div class="font-display text-3xl md:text-4xl font-bold tracking-tighter text-accent uppercase line-clamp-1 leading-none">{{ (overall.top_studios.keys()|list)[0] if overall.top_studios else 'N/A' }}</div>
+				<div class="font-mono text-xs md:text-sm text-gray-500 tracking-widest mt-2 inline-block px-4">TOP STUDIO</div>
+			</div>
+			<div class="text-center gs-reveal-up delay-400">
+				<div class="font-display text-3xl md:text-4xl font-bold tracking-tighter text-gray-400 uppercase line-clamp-1 leading-none">{{ (overall.countries.keys()|list)[0] if overall.countries else 'JP' }}</div>
+				<div class="font-mono text-xs md:text-sm text-gray-500 tracking-widest mt-2 inline-block px-4">TOP REGION</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+<!-- CHARTS SECTION -->
+<section class="scroll-section">
+	<div class="max-w-[1400px] mx-auto w-full px-4 md:px-8 grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8 items-stretch">
+		<!-- Format Card -->
+		<div class="bg-white/5 border border-white/10 rounded-3xl md:rounded-[3rem] p-6 md:p-8 flex flex-col items-center justify-center min-h-[350px] md:min-h-[400px]">
+			<h2 class="section-title text-2xl md:text-3xl mb-8 text-center">Format<br /><span class="text-accent">Distribution</span></h2>
+			<div class="relative w-full h-full flex-1 min-h-[250px]">
+				<canvas id="formatChart"></canvas>
+			</div>
+		</div>
+
+		<!-- Score Card -->
+		<div class="bg-white/5 border border-white/10 rounded-3xl md:rounded-[3rem] p-6 md:p-8 flex flex-col justify-center min-h-[350px] md:min-h-[400px]">
+			<h2 class="section-title text-2xl md:text-3xl mb-8 text-center">Score<br /><span class="text-[#ff8080]">Frequency</span></h2>
+			<div class="relative w-full h-full flex-1 min-h-[250px]">
+				<canvas id="scoreChart"></canvas>
+			</div>
+		</div>
+
+		<!-- Genre Card -->
+		<div class="bg-white/5 border border-white/10 rounded-3xl md:rounded-[3rem] p-6 md:p-8 flex flex-col items-center justify-center min-h-[350px] md:min-h-[400px]">
+			<h2 class="section-title text-2xl md:text-3xl mb-8 text-center">Genre<br /><span class="text-blue-400">Spectrum</span></h2>
+			<div class="relative w-full h-full flex-1 min-h-[250px]">
+				<canvas id="genreChart"></canvas>
+			</div>
+		</div>
+
+		<!-- Activity Card -->
+		<div class="bg-white/5 border border-white/10 rounded-3xl md:rounded-[3rem] p-6 md:p-8 flex flex-col justify-center min-h-[350px] md:min-h-[400px]">
+			<h2 class="section-title text-2xl md:text-3xl mb-8 text-center">Monthly<br /><span class="text-purple-400">Rhythm</span></h2>
+			<div class="relative w-full h-full flex-1 min-h-[250px]">
+				<canvas id="activityChart"></canvas>
+			</div>
+		</div>
+	</div>
+</section>
+
+<!-- BEST OF YEAR REMOVED -->
+
+<!-- THE GRIND (ONGOING) -->
+{% if ongoing.anime or ongoing.manga %}
+<section class="scroll-section relative overflow-hidden" id="grindSection">
+	<div id="grindBg" class="absolute inset-0 bg-[#050505] transition-all duration-700 ease-out bg-cover bg-center opacity-30 blur-sm transform scale-105" style="will-change: transform, opacity, background-image"></div>
+	<div class="absolute inset-0 bg-gradient-to-b from-[#030303] via-transparent to-[#030303]"></div>
+
+	<div class="relative z-10 px-6 md:px-16 mb-8 md:mb-12">
+		<h2 class="section-title text-stroke text-4xl md:text-6xl">The Grind</h2>
+		<p class="font-mono text-gray-400 mt-4 text-sm">Ongoing obsessions.</p>
+	</div>
+
+	<div class="relative z-10 flex gap-4 md:gap-8 px-6 md:px-16 overflow-x-auto no-scrollbar pb-12 snap-x snap-mandatory items-end min-h-[400px]">
+		{% for item in (ongoing.anime + ongoing.manga)[:15] %}
+		<div class="grind-card flex-shrink-0 w-60 md:w-72 group snap-start cursor-pointer opacity-0" data-cover="{{ item.cover_image }}" style="animation: fadeInUp 0.6s ease-out forwards; animation-delay: {{ loop.index0 * 0.1 }}s;">
+			<div class="aspect-[3/4] overflow-hidden rounded-2xl md:rounded-[2.5rem] mb-4 relative shadow-2xl transition-all duration-500 group-hover:-translate-y-4 md:group-hover:-translate-y-6 group-hover:scale-105 border-2 border-white/5 group-hover:border-accent">
+				<img src="{{ item.cover_image }}" class="w-full h-full object-cover" loading="lazy" />
+				<div class="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent opacity-80 group-hover:opacity-100 transition-opacity"></div>
+				<div class="absolute bottom-6 left-6 right-6">
+					<div class="text-white font-display font-bold text-3xl md:text-4xl leading-none mb-2">{{ item.progress }}</div>
+					<div class="flex items-center justify-between">
+						<div class="text-[10px] text-accent font-mono tracking-[0.2em] uppercase">{{ 'Episodes' if item.progress > 100 else 'Chapters' }}</div>
+						<div class="bg-white/20 backdrop-blur-md px-3 py-1 rounded-full text-xs font-bold">{{ item.score if item.score else '-' }}</div>
+					</div>
+				</div>
+			</div>
+			<div class="font-bold truncate text-lg md:text-xl text-center text-gray-400 group-hover:text-white transition-colors px-2">{{ item.title }}</div>
+		</div>
+		{% endfor %}
+	</div>
+</section>
+{% endif %}
+
+<!-- THE CAST -->
+{% if favorites and favorites.characters %}
+<section class="scroll-section overflow-hidden">
+	<div class="px-6 md:px-16 mb-8 md:mb-12">
+		<h2 class="section-title text-stroke text-4xl md:text-6xl">The Cast</h2>
+	</div>
+	<div class="flex gap-6 md:gap-8 px-6 md:px-16 overflow-x-auto no-scrollbar pb-12">
+		{% for char in favorites.characters %}
+		<div class="flex-shrink-0 w-40 md:w-64 group cursor-none hover-target">
+			<div class="overflow-hidden rounded-lg aspect-[3/4] mb-4 relative">
+				<img src="{{ char.image.large }}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 grayscale group-hover:grayscale-0" />
+				<div class="absolute inset-0 ring-1 ring-inset ring-white/10 group-hover:ring-accent transition-all"></div>
+			</div>
+			<div class="font-display text-lg md:text-2xl group-hover:text-accent transition-colors truncate">{{ char.name.full }}</div>
+		</div>
+		{% endfor %}
+	</div>
+</section>
+{% endif %}
+
+<!-- TIMELINE -->
+<div class="relative py-12 md:py-20">
+	<div class="absolute left-4 md:left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-transparent via-white/20 to-transparent hidden md:block"></div>
+	{% set months = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'] %} {% for m in monthly_overview %} {% if m.activity_summary.total_titles_completed > 0 %} {% set bg = m.top_anime.banner_image or m.top_anime.cover_image or '' %} {% set align_right = loop.index0 % 2 != 0 %}
+
+	<section class="min-h-[50vh] md:min-h-[70vh] relative overflow-hidden group flex items-center py-12 md:py-0">
+		<div class="absolute inset-0 opacity-0 group-hover:opacity-20 transition-opacity duration-1000 pointer-events-none">
+			{% if bg %}
+			<img src="{{ bg }}" class="w-full h-full object-cover grayscale blur-sm scale-110 group-hover:scale-100 transition-transform duration-[2s]" />
+			{% endif %}
+		</div>
+
+		<div class="relative z-10 px-6 md:px-8 max-w-7xl mx-auto w-full grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-24 items-center">
+			<div class="{{ 'md:order-2 md:text-right' if align_right else '' }}">
+				<div class="font-mono text-accent mb-2 text-xl md:text-2xl opacity-50">0{{ m.month }}</div>
+				<h3 class="font-display text-5xl md:text-9xl font-bold mb-4 opacity-10 group-hover:opacity-100 transition-all duration-500 translate-y-4 group-hover:translate-y-0 text-white">{{ months[m.month-1] }}</h3>
+				<div class="flex flex-col {{ 'md:items-end' if align_right else 'items-start' }} gap-2">
+					<div class="font-mono text-gray-400 text-sm md:text-base border-l-2 border-white/20 pl-4 {{ 'md:border-l-0 md:border-r-2 md:pl-0 md:pr-4' if align_right else '' }}">{{ m.activity_summary.total_titles_completed }} TITLES CONSUMED</div>
+					<div class="flex gap-2 mt-2 flex-wrap">
+						{% for g in m.top_genres[:3] %}
+						<span class="text-[10px] md:text-xs font-mono border border-white/20 px-2 py-1 rounded-full text-gray-400">{{ g }}</span>
+						{% endfor %}
+					</div>
+				</div>
+			</div>
+
+			<div class="flex gap-4 overflow-x-auto pb-4 {{ 'md:justify-start' if align_right else 'md:justify-end' }} no-scrollbar">{{ mini_card(m.top_anime, 'ANIME') }} {{ mini_card(m.top_manga, 'MANGA') }}</div>
+		</div>
+	</section>
+	{% endif %} {% endfor %}
+</div>
+
+<!-- OUTRO -->
+<section class="scroll-section h-screen items-center justify-center bg-[#050505] text-center px-4">
+	<h2 class="font-display text-4xl md:text-8xl mb-8 md:mb-12">Your {{ year }}.<br />Captured.</h2>
+	<div class="flex flex-col gap-6 items-center">
+		<button id="shareBtn" class="bg-white text-black font-mono px-8 md:px-12 py-4 md:py-5 text-lg md:text-xl hover:scale-105 transition-transform hover-target font-bold tracking-tight">GENERATE SHARE CARD</button>
+		<div class="font-mono text-xs text-gray-600">4:5 Portrait Format</div>
+	</div>
+</section>
