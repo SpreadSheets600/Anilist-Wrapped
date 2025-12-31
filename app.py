@@ -6,7 +6,6 @@ from flask import (
     send_file,
     render_template,
 )
-import httpx
 import hashlib
 import asyncio
 from io import BytesIO
@@ -33,7 +32,7 @@ def index():
 
 @app.route("/api/rewind")
 @cache.cached(timeout=3600, query_string=True)
-async def api_rewind():
+def api_rewind():
     username = request.args.get("username")
     year = request.args.get("year")
 
@@ -46,13 +45,14 @@ async def api_rewind():
         year = int(year)
 
     try:
-        anime_task = fetch_anime(username)
-        manga_task = fetch_manga(username)
-        favorites_task = fetch_favorites(username)
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
 
-        anime, manga, favorites = await asyncio.gather(
-            anime_task, manga_task, favorites_task
-        )
+        anime = loop.run_until_complete(fetch_anime(username))
+        manga = loop.run_until_complete(fetch_manga(username))
+        favorites = loop.run_until_complete(fetch_favorites(username))
+
+        loop.close()
 
         result = build_rewind(anime, manga, favorites, year)
 
@@ -83,21 +83,22 @@ def api_share():
 
 
 @app.route("/api/proxy")
-async def proxy_image():
+def proxy_image():
     url = request.args.get("url")
     if not url:
         return jsonify({"error": "URL is required"}), 400
 
-    async with httpx.AsyncClient() as client:
-        try:
-            resp = await client.get(url)
-            return Response(
-                resp.content,
-                mimetype=resp.headers.get("content-type"),
-                headers={"Access-Control-Allow-Origin": "*"},
-            )
-        except Exception as e:
-            return jsonify({"error": str(e)}), 500
+    try:
+        import requests as req
+
+        resp = req.get(url, timeout=10)
+        return Response(
+            resp.content,
+            mimetype=resp.headers.get("content-type"),
+            headers={"Access-Control-Allow-Origin": "*"},
+        )
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 
 @app.route("/api/generate-card")
