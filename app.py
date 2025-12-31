@@ -6,17 +6,44 @@ from flask import (
     send_file,
     render_template,
 )
-import hashlib
+
+import os
+import sys
 import asyncio
+import hashlib
 from io import BytesIO
 from datetime import datetime
 from flask_caching import Cache
 
-from rewind import build_rewind
-from data.anime import fetch_anime
-from data.manga import fetch_manga
-from share_card import create_share_card
-from data.favorites import fetch_favorites
+
+sys.path.insert(0, os.path.dirname(__file__))
+
+try:
+    from rewind import build_rewind
+    from data.anime import fetch_anime
+    from data.manga import fetch_manga
+    from share_card import create_share_card
+    from data.favorites import fetch_favorites
+except ImportError as e:
+    print(f"Import error: {e}")
+
+    async def fetch_anime(username):
+        return {"lists": []}
+
+    async def fetch_manga(username):
+        return {"lists": []}
+
+    async def fetch_favorites(username):
+        return {"characters": []}
+
+    def build_rewind(anime, manga, favorites, year):
+        return {"error": "Import failed"}
+
+    def create_share_card(data):
+        from PIL import Image
+
+        return Image.new("RGB", (1080, 1350), color="#030303")
+
 
 app = Flask(__name__)
 cache = Cache(config={"CACHE_TYPE": "SimpleCache", "CACHE_DEFAULT_TIMEOUT": 3600})
@@ -27,7 +54,15 @@ share_cache = {}
 
 @app.route("/")
 def index():
-    return render_template("index.html")
+    try:
+        return render_template("index.html")
+    except Exception as e:
+        return jsonify({"error": str(e), "message": "Template error"}), 500
+
+
+@app.route("/health")
+def health():
+    return jsonify({"status": "ok", "message": "Server is running"}), 200
 
 
 @app.route("/api/rewind")
