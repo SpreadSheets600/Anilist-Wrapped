@@ -1,0 +1,7 @@
+Flask
+Flask-Caching
+httpx
+python-dateutil
+Pillow
+requests
+serverless-wsgi

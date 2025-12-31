@@ -2,6 +2,9 @@
   command = "pip install -r requirements.txt && mkdir -p static"
   publish = "static"
 
+[functions]
+  directory = ".netlify/functions"
+
 [[redirects]]
   from = "/*"
   to = "/.netlify/functions/app/:splat"
