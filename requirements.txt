@@ -1,5 +1,5 @@
-fastapi
-uvicorn
+Flask
+Flask-Caching
+gunicorn
 httpx
 python-dateutil
-mangum
