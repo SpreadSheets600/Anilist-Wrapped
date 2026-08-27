@@ -74,23 +74,37 @@ class App {
 		gsap.to("#userForm", { opacity: 1, duration: 2, delay: 1, ease: "power2.out" });
 		const params = new URLSearchParams(window.location.search);
 		if (params.get("username")) document.getElementById("username").value = params.get("username");
+		// Dynamic year default: current year, allow override via ?year=
+		const yearInput = document.getElementById("year");
+		if (params.get("year")) yearInput.value = params.get("year");
+		else yearInput.value = new Date().getFullYear();
 	}
 
 	async handleSubmit(e) {
 		e.preventDefault();
-		const username = document.getElementById("username").value;
+		const username = document.getElementById("username").value.trim();
 		const year = document.getElementById("year").value;
 		const loader = document.getElementById("loader");
+		const errorEl = document.getElementById("error");
 
 		if (!username) return;
 		loader.classList.remove("hidden");
+		errorEl.classList.add("hidden");
+		errorEl.textContent = "";
 
 		try {
-			const res = await fetch(`${this.api}/rewind?username=${username}&year=${year}`);
-			if (!res.ok) throw new Error("User not found or private");
+			const res = await fetch(`${this.api}/rewind?username=${encodeURIComponent(username)}&year=${encodeURIComponent(year)}`);
 			const result = await res.json();
+			if (!res.ok) throw new Error(result.error || "User not found or private");
+			if (!result.data || (result.data.overall.anime_completed === 0 && result.data.overall.manga_completed === 0)) {
+				throw new Error(`No completed anime/manga found for ${username} in ${year}. Try a different year or check if lists are public.`);
+			}
 			this.data = result.data;
-
+			// Update URL for shareability
+			const url = new URL(window.location);
+			url.searchParams.set("username", username);
+			url.searchParams.set("year", year);
+			history.replaceState({}, "", url);
 			gsap.to(this.dom.gate, {
 				yPercent: -100,
 				duration: 1.5,
@@ -98,8 +112,8 @@ class App {
 				onComplete: () => this.render(result.html),
 			});
 		} catch (err) {
-			document.getElementById("error").textContent = err.message;
-			document.getElementById("error").classList.remove("hidden");
+			errorEl.textContent = err.message;
+			errorEl.classList.remove("hidden");
 		} finally {
 			loader.classList.add("hidden");
 		}

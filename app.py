@@ -72,14 +72,31 @@ def api_rewind():
         year = int(year)
 
     try:
-        loop = asyncio.new_event_loop()
-        asyncio.set_event_loop(loop)
+        # Use asyncio.run for clean event loop handling (works with Flask)
+        async def _fetch_all():
+            return await asyncio.gather(
+                fetch_anime(username),
+                fetch_manga(username),
+                fetch_favorites(username),
+            )
+        try:
+            anime, manga, favorites = asyncio.run(_fetch_all())
+        except RuntimeError:
+            # Fallback for case where loop already running (e.g. Flask reloader)
+            loop = asyncio.new_event_loop()
+            asyncio.set_event_loop(loop)
+            anime = loop.run_until_complete(fetch_anime(username))
+            manga = loop.run_until_complete(fetch_manga(username))
+            favorites = loop.run_until_complete(fetch_favorites(username))
+            loop.close()
 
-        anime = loop.run_until_complete(fetch_anime(username))
-        manga = loop.run_until_complete(fetch_manga(username))
-        favorites = loop.run_until_complete(fetch_favorites(username))
-
-        loop.close()
+        # Handle private/not-found gracefully
+        if anime is None:
+            anime = {"lists": []}
+        if manga is None:
+            manga = {"lists": []}
+        if favorites is None:
+            favorites = {"characters": [], "staff": []}
 
         result = build_rewind(anime, manga, favorites, year)
 

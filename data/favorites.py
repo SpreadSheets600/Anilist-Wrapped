@@ -24,14 +24,21 @@ query ($username: String) {
 
 
 async def fetch_favorites(username: str):
-    async with httpx.AsyncClient() as client:
+    async with httpx.AsyncClient(timeout=15) as client:
         r = await client.post(
             "https://graphql.anilist.co",
             json={"query": FAVORITES_QUERY, "variables": {"username": username}},
         )
         r.raise_for_status()
-        data = r.json()["data"]["User"]["favourites"]
+        data = r.json()
+        if data.get("errors"):
+            # User not found -> return empty
+            return {"characters": [], "staff": []}
+        user = data["data"].get("User")
+        if not user or not user.get("favourites"):
+            return {"characters": [], "staff": []}
+        fav = user["favourites"]
         return {
-            "characters": data["characters"]["nodes"],
-            "staff": data["staff"]["nodes"],
+            "characters": fav.get("characters", {}).get("nodes", []),
+            "staff": fav.get("staff", {}).get("nodes", []),
         }

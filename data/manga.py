@@ -13,7 +13,7 @@ query ($username: String) {
         updatedAt
         completedAt { year month }
         media {
-          title { english }
+          title { english romaji native }
           countryOfOrigin
           genres
           bannerImage
@@ -27,10 +27,16 @@ query ($username: String) {
 
 
 async def fetch_manga(username: str):
-    async with httpx.AsyncClient() as client:
+    async with httpx.AsyncClient(timeout=15) as client:
         r = await client.post(
             "https://graphql.anilist.co",
             json={"query": MANGA_QUERY, "variables": {"username": username}},
         )
         r.raise_for_status()
-        return r.json()["data"]["MediaListCollection"]
+        data = r.json()
+        if data.get("errors"):
+            raise Exception(data["errors"][0].get("message", "AniList error"))
+        col = data["data"]["MediaListCollection"]
+        if col is None:
+            return {"lists": []}
+        return col

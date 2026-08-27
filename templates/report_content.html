@@ -135,9 +135,9 @@
 			<div class="group relative overflow-hidden rounded-[2rem] border border-white/10 gs-reveal-left">
 				<!-- Cinematic Background -->
 				<div class="absolute inset-0 z-0">
-					{% if overall.best_anime.banner_image %}
+					{% if overall.best_anime and overall.best_anime.banner_image %}
 					<img src="{{ overall.best_anime.banner_image }}" class="w-full h-full object-cover opacity-30 group-hover:opacity-40 transition-all duration-1000 blur-sm group-hover:blur-0 scale-110 group-hover:scale-105" />
-					{% elif overall.best_anime.cover_image %}
+					{% elif overall.best_anime and overall.best_anime.cover_image %}
 					<img src="{{ overall.best_anime.cover_image }}" class="w-full h-full object-cover opacity-30 group-hover:opacity-40 transition-all duration-1000 blur-md group-hover:blur-sm scale-110" />
 					{% else %}
 					<div class="w-full h-full bg-gradient-to-br from-blue-900/20 to-transparent"></div>
@@ -182,9 +182,9 @@
 			<div class="group relative overflow-hidden rounded-[2rem] border border-white/10 gs-reveal-right">
 				<!-- Cinematic Background -->
 				<div class="absolute inset-0 z-0">
-					{% if overall.best_manga.banner_image %}
+					{% if overall.best_manga and overall.best_manga.banner_image %}
 					<img src="{{ overall.best_manga.banner_image }}" class="w-full h-full object-cover opacity-30 group-hover:opacity-40 transition-all duration-1000 blur-sm group-hover:blur-0 scale-110 group-hover:scale-105" />
-					{% elif overall.best_manga.cover_image %}
+					{% elif overall.best_manga and overall.best_manga.cover_image %}
 					<img src="{{ overall.best_manga.cover_image }}" class="w-full h-full object-cover opacity-30 group-hover:opacity-40 transition-all duration-1000 blur-md group-hover:blur-sm scale-110" />
 					{% else %}
 					<div class="w-full h-full bg-gradient-to-bl from-red-900/20 to-transparent"></div>

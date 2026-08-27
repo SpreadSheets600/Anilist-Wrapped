@@ -33,7 +33,10 @@
 				<h1 class="font-display text-5xl italic opacity-0" id="gateTitle">The Anime Archive</h1>
 				<form id="userForm" class="opacity-0">
 					<input id="username" type="text" placeholder="USERNAME" class="bg-transparent border-b border-white/30 text-center py-2 font-mono outline-none uppercase tracking-widest focus:border-white transition-colors" />
-					<input id="year" type="number" value="2025" class="hidden" />
+					<div class="flex items-center justify-center gap-3 mt-6">
+						<input id="year" type="number" value="2025" min="2000" max="2030" class="w-24 bg-transparent border border-white/20 text-center py-2 font-mono outline-none focus:border-white transition-colors text-sm" />
+						<span class="font-mono text-xs text-gray-500">YEAR</span>
+					</div>
 					<button type="submit" class="block mx-auto mt-8 font-mono text-xs border border-white/20 px-6 py-2 hover:bg-white hover:text-black transition-colors cursor-none hover-target">ENTER</button>
 				</form>
 				<div id="loader" class="hidden font-mono text-xs text-blue-300 animate-pulse">CONNECTING...</div>

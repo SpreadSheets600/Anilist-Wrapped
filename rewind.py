@@ -69,8 +69,8 @@ def build_rewind(anime_data, manga_data, favorites_data, year: int):
         dt = datetime.fromtimestamp(ts)
         return dt.year == year
 
-    for lst in anime_data["lists"]:
-        for e in lst["entries"]:
+    for lst in (anime_data or {}).get("lists") or []:
+        for e in lst.get("entries") or []:
             media = e["media"]
 
             if e["status"] in ["CURRENT", "REPEATING"] and was_active_in_year(
@@ -79,7 +79,9 @@ def build_rewind(anime_data, manga_data, favorites_data, year: int):
                 ongoing["anime"].append(
                     {
                         "title": media["title"].get("english")
-                        or media["title"]["english"],
+                        or media["title"].get("romaji")
+                        or media["title"].get("native")
+                        or "Unknown",
                         "cover_image": media["coverImage"]["large"],
                         "progress": e.get("progress") or 0,
                         "score": e["score"],
@@ -110,7 +112,10 @@ def build_rewind(anime_data, manga_data, favorites_data, year: int):
                 overall["studios"][s["name"]] += 1
 
             anime_obj = {
-                "title": media["title"].get("english") or media["title"]["english"],
+                "title": media["title"].get("english")
+                or media["title"].get("romaji")
+                or media["title"].get("native")
+                or "Unknown",
                 "score": e["score"],
                 "cover_image": media["coverImage"]["large"],
                 "banner_image": media["bannerImage"],
@@ -123,8 +128,8 @@ def build_rewind(anime_data, manga_data, favorites_data, year: int):
                 overall["genres"][g] += 1
                 monthly[m]["genres"][g] += 1
 
-    for lst in manga_data["lists"]:
-        for e in lst["entries"]:
+    for lst in (manga_data or {}).get("lists") or []:
+        for e in lst.get("entries") or []:
             media = e["media"]
 
             if e["status"] in ["CURRENT", "REPEATING"] and was_active_in_year(
@@ -133,7 +138,9 @@ def build_rewind(anime_data, manga_data, favorites_data, year: int):
                 ongoing["manga"].append(
                     {
                         "title": media["title"].get("english")
-                        or media["title"]["english"],
+                        or media["title"].get("romaji")
+                        or media["title"].get("native")
+                        or "Unknown",
                         "cover_image": media["coverImage"]["large"],
                         "progress": e.get("progress") or 0,
                         "score": e["score"],
@@ -158,7 +165,10 @@ def build_rewind(anime_data, manga_data, favorites_data, year: int):
             overall["countries"][origin] += 1
 
             manga_obj = {
-                "title": media["title"].get("english") or media["title"]["english"],
+                "title": media["title"].get("english")
+                or media["title"].get("romaji")
+                or media["title"].get("native")
+                or "Unknown",
                 "score": e["score"],
                 "cover_image": media["coverImage"]["large"],
                 "banner_image": media["bannerImage"],
