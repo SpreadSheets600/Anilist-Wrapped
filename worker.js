@@ -71,15 +71,22 @@ query ($username: String) {
 async function fetchGql(query, variables) {
   const r = await fetch("https://graphql.anilist.co", {
     method: "POST",
-    headers: { "Content-Type": "application/json", Accept: "application/json" },
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+      Referer: "https://anilist.co/",
+      Origin: "https://anilist.co",
+    },
+    cf: { cacheTtl: 0, cacheEverything: false },
     body: JSON.stringify({ query, variables }),
   });
   if (!r.ok) {
     const t = await r.text();
-    throw new Error(`AniList ${r.status}: ${t.slice(0, 300)}`);
+    throw new Error(`AniList ${r.status}: ${t.slice(0, 500)}`);
   }
   const j = await r.json();
-  if (j.errors) throw new Error(j.errors[0].message);
+  if (j.errors) throw new Error(j.errors[0].message || JSON.stringify(j.errors).slice(0,300));
   return j.data;
 }
 
