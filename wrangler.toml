@@ -1,0 +1,12 @@
+name = "anilist-wrapped"
+main = "worker.js"
+compatibility_date = "2025-08-27"
+compatibility_flags = ["nodejs_compat"]
+
+[assets]
+directory = "./static"
+not_found_handling = "none"
+binding = "ASSETS"
+
+[observability]
+enabled = true

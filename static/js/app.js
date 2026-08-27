@@ -436,42 +436,6 @@ class App {
 				scrollTrigger: { trigger: "body", start: "top top", end: "bottom bottom", scrub: 1 },
 			});
 		}
-
-		document.getElementById("shareBtn").addEventListener("click", () => this.generateShareCard());
-	}
-
-	async generateShareCard() {
-		const btn = document.getElementById("shareBtn");
-		btn.textContent = "GENERATING...";
-		btn.disabled = true;
-
-		try {
-			const shareId = this.data.shareId;
-			const response = await fetch(`/api/generate-card?shareId=${shareId}`);
-
-			if (!response.ok) throw new Error("Failed to generate card");
-
-			const blob = await response.blob();
-			const url = window.URL.createObjectURL(blob);
-			const link = document.createElement("a");
-			link.href = url;
-			link.download = `Wrapped-${this.data.username}-${this.data.year}.png`;
-			link.click();
-			window.URL.revokeObjectURL(url);
-
-			btn.textContent = "DOWNLOAD COMPLETE!";
-			setTimeout(() => {
-				btn.textContent = "GENERATE SHARE CARD";
-				btn.disabled = false;
-			}, 2000);
-		} catch (error) {
-			console.error("Error generating card:", error);
-			btn.textContent = "ERROR - TRY AGAIN";
-			setTimeout(() => {
-				btn.textContent = "GENERATE SHARE CARD";
-				btn.disabled = false;
-			}, 2000);
-		}
 	}
 }
 

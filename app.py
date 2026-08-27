@@ -3,7 +3,6 @@ from flask import (
     jsonify,
     request,
     Response,
-    send_file,
     render_template,
 )
 
@@ -11,7 +10,6 @@ import os
 import sys
 import asyncio
 import hashlib
-from io import BytesIO
 from datetime import datetime
 from flask_caching import Cache
 
@@ -22,7 +20,6 @@ try:
     from rewind import build_rewind
     from data.anime import fetch_anime
     from data.manga import fetch_manga
-    from share_card import create_share_card
     from data.favorites import fetch_favorites
 except ImportError as e:
     print(f"Import error: {e}")
@@ -38,11 +35,6 @@ except ImportError as e:
 
     def build_rewind(anime, manga, favorites, year):
         return {"error": "Import failed"}
-
-    def create_share_card(data):
-        from PIL import Image
-
-        return Image.new("RGB", (1080, 1350), color="#030303")
 
 
 app = Flask(__name__)
@@ -133,31 +125,6 @@ def proxy_image():
             headers={"Access-Control-Allow-Origin": "*"},
         )
     except Exception as e:
-        return jsonify({"error": str(e)}), 500
-
-
-@app.route("/api/generate-card")
-def generate_card():
-    share_id = request.args.get("shareId")
-    if not share_id or share_id not in share_cache:
-        return jsonify({"error": "Share not found"}), 404
-
-    try:
-        data = share_cache[share_id]
-        img = create_share_card(data)
-
-        img_io = BytesIO()
-        img.save(img_io, "PNG", quality=95)
-        img_io.seek(0)
-
-        return send_file(
-            img_io,
-            mimetype="image/png",
-            as_attachment=True,
-            download_name=f"Wrapped-{data.get('username', 'User')}-{data.get('year', 2024)}.png",
-        )
-    except Exception as e:
-        app.logger.error(f"Error generating card: {e}")
         return jsonify({"error": str(e)}), 500
 
 
