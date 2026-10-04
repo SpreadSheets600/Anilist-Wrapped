@@ -54,3 +54,8 @@ python app.py
 - Vanilla JavaScript (ES6+), GSAP, Lenis, Chart.js
 - Tailwind CSS
 - Modern CSS with custom properties
+
+## Contributors
+
+- [@aritramondal0300](https://github.com/aritramondal0300)
+- [@SpreadSheets600](https://github.com/SpreadSheets600)
