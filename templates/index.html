@@ -1,57 +1,50 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>AniList Wrapped '25</title>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#080908">
+  <meta name="description" content="Your year in anime and manga. The stories, the characters, the feelings — rediscover your AniList year.">
+  <title>AniList Wrapped — The Anime Archive</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='js/grid-motion.css') }}">
+  <script src="{{ url_for('static', filename='js/grid-motion.js') }}" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
+  <script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js" defer></script>
+  <script src="{{ url_for('static', filename='js/anilist-direct.js') }}" defer></script>
+  <script src="{{ url_for('static', filename='js/app.js') }}" defer></script>
+</head>
+<body>
+  <div class="noise" aria-hidden="true"></div>
 
-		<!-- Tailwind -->
-		<script src="https://cdn.tailwindcss.com"></script>
+  <!-- HUD -->
+  <div class="hud" id="hud" hidden>
+    <div class="hud-bar"><i id="hudProgress"></i></div>
+    <div class="hud-chapter"><span id="hudNum">00</span><span id="hudLabel">ARCHIVE</span></div>
+    <button class="hud-home" id="hudHome" type="button">↩ NEW ARCHIVE</button>
+  </div>
 
-		<!-- Lenis (Smooth Scroll) -->
-		<script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.29/bundled/lenis.min.js"></script>
+  <section id="gate" class="gate" data-lenis-prevent aria-label="The Anime Archive">
+    <header class="site-header"><a class="wordmark" href="/" aria-label="The Anime Archive home"><span class="brand-symbol" aria-hidden="true">✳</span> THE ANIME<span class="brand-light">ARCHIVE</span></a></header>
+    <section class="gate-hero" aria-labelledby="landingTitle">
+      <div id="coverWall" class="cover-wall" aria-hidden="true"><div class="grid-fallback"><img src="{{ url_for('static', filename='images/covers/16498.jpg') }}" alt="" decoding="async"><img src="{{ url_for('static', filename='images/covers/101922.jpg') }}" alt="" decoding="async"><img src="{{ url_for('static', filename='images/covers/113415.jpg') }}" alt="" decoding="async"><img src="{{ url_for('static', filename='images/covers/1535.jpg') }}" alt="" decoding="async"><img src="{{ url_for('static', filename='images/covers/21459.jpg') }}" alt="" decoding="async"><img src="{{ url_for('static', filename='images/covers/11061.jpg') }}" alt="" decoding="async"><img src="{{ url_for('static', filename='images/covers/21087.jpg') }}" alt="" decoding="async"><img src="{{ url_for('static', filename='images/covers/21.jpg') }}" alt="" decoding="async"><img src="{{ url_for('static', filename='images/covers/20605.jpg') }}" alt="" decoding="async"><img src="{{ url_for('static', filename='images/covers/5114.jpg') }}" alt="" decoding="async"><img src="{{ url_for('static', filename='images/covers/20.jpg') }}" alt="" decoding="async"><img src="{{ url_for('static', filename='images/covers/20954.jpg') }}" alt="" decoding="async"><img src="{{ url_for('static', filename='images/covers/11757.jpg') }}" alt="" decoding="async"><img src="{{ url_for('static', filename='images/covers/21519.jpg') }}" alt="" decoding="async"><img src="{{ url_for('static', filename='images/covers/127230.jpg') }}" alt="" decoding="async"><img src="{{ url_for('static', filename='images/covers/101759.jpg') }}" alt="" decoding="async"><img src="{{ url_for('static', filename='images/covers/20755.jpg') }}" alt="" decoding="async"><img src="{{ url_for('static', filename='images/covers/21507.jpg') }}" alt="" decoding="async"><img src="{{ url_for('static', filename='images/covers/21355.jpg') }}" alt="" decoding="async"><img src="{{ url_for('static', filename='images/covers/20665.jpg') }}" alt="" decoding="async"></div></div>
+      <div class="cover-shade" aria-hidden="true"></div>
+      <div class="gate-inner">
+        <h1 class="gate-title" id="landingTitle"><span class="gl"><span>All those worlds.</span></span><span class="gl"><span><em>Still with you.</em></span></span></h1>
+        <form id="form" class="gate-form" autocomplete="on">
+          <label class="sr-only" for="username">Your AniList username</label>
+          <div class="field"><span class="input-at" aria-hidden="true">@</span><input id="username" name="username" placeholder="Your AniList username" required maxlength="50" autocomplete="username" spellcheck="false"><button id="submit" type="submit" class="enter" aria-label="Open your archive"><span aria-hidden="true">↗</span></button></div>
+          <p id="message" class="message" role="status" aria-live="polite"></p>
+        </form>
+      </div>
+    </section>
+    <div class="loader" id="loader" hidden role="status" aria-live="polite"><div class="loader-mark" aria-hidden="true">✳</div><div class="loader-line" id="loadLine">Opening your archive…</div><div class="loading-track" aria-hidden="true"><i></i></div><button id="cancelLoad" type="button">Cancel</button></div>
+  </section>
 
-		<!-- GSAP -->
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/CustomEase.min.js"></script>
-		<script src="https://unpkg.com/split-type"></script>
-
-		<!-- HTML2Canvas -->
-		<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
-
-		<link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}" />
-	</head>
-	<body class="bg-[#030303] text-white">
-		<div id="cursor-dot"></div>
-		<div id="cursor-outline"></div>
-		<div class="noise-overlay"></div>
-
-		<!-- ENTRY GATE -->
-		<div id="gate" class="fixed inset-0 z-50 bg-[#030303] flex items-center justify-center">
-			<div class="text-center space-y-8">
-				<h1 class="font-display text-5xl italic opacity-0" id="gateTitle">The Anime Archive</h1>
-				<form id="userForm" class="opacity-0">
-					<input id="username" type="text" placeholder="USERNAME" class="bg-transparent border-b border-white/30 text-center py-2 font-mono outline-none uppercase tracking-widest focus:border-white transition-colors" />
-					<div class="flex items-center justify-center gap-3 mt-6">
-						<input id="year" type="number" value="2025" min="2000" max="2030" class="w-24 bg-transparent border border-white/20 text-center py-2 font-mono outline-none focus:border-white transition-colors text-sm" />
-						<span class="font-mono text-xs text-gray-500">YEAR</span>
-					</div>
-					<button type="submit" class="block mx-auto mt-8 font-mono text-xs border border-white/20 px-6 py-2 hover:bg-white hover:text-black transition-colors cursor-none hover-target">ENTER</button>
-				</form>
-				<div id="loader" class="hidden font-mono text-xs text-blue-300 animate-pulse">CONNECTING...</div>
-				<div id="error" class="hidden font-mono text-xs text-red-500"></div>
-			</div>
-		</div>
-
-		<!-- MAIN CONTENT -->
-		<main id="app" class="opacity-0">
-			<!-- Content injected by JS -->
-		</main>
-
-		<!-- SHARE CAPTURE ZONE -->
-		<div id="shareCardContainer"></div>
-
-		<script src="{{ url_for('static', filename='js/app.js') }}"></script>
-	</body>
+  <main id="app"></main>
+</body>
 </html>

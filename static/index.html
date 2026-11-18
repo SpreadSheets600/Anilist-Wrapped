@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#080908">
+  <meta name="description" content="Your year in anime and manga. The stories, the characters, the feelings — rediscover your AniList year.">
+  <title>AniList Wrapped — The Anime Archive</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/styles.css">
+  <link rel="stylesheet" href="/js/grid-motion.css">
+  <script src="/js/grid-motion.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
+  <script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js" defer></script>
+  <script src="/js/anilist-direct.js" defer></script>
+  <script src="/js/app.js" defer></script>
+</head>
+<body>
+  <div class="noise" aria-hidden="true"></div>
+
+  <!-- HUD -->
+  <div class="hud" id="hud" hidden>
+    <div class="hud-bar"><i id="hudProgress"></i></div>
+    <div class="hud-chapter"><span id="hudNum">00</span><span id="hudLabel">ARCHIVE</span></div>
+    <button class="hud-home" id="hudHome" type="button">↩ NEW ARCHIVE</button>
+  </div>
+
+  <section id="gate" class="gate" data-lenis-prevent aria-label="The Anime Archive">
+    <header class="site-header"><a class="wordmark" href="/" aria-label="The Anime Archive home"><span class="brand-symbol" aria-hidden="true">✳</span> THE ANIME<span class="brand-light">ARCHIVE</span></a></header>
+    <section class="gate-hero" aria-labelledby="landingTitle">
+      <div id="coverWall" class="cover-wall" aria-hidden="true"><div class="grid-fallback"><img src="/images/covers/16498.jpg" alt="" decoding="async"><img src="/images/covers/101922.jpg" alt="" decoding="async"><img src="/images/covers/113415.jpg" alt="" decoding="async"><img src="/images/covers/1535.jpg" alt="" decoding="async"><img src="/images/covers/21459.jpg" alt="" decoding="async"><img src="/images/covers/11061.jpg" alt="" decoding="async"><img src="/images/covers/21087.jpg" alt="" decoding="async"><img src="/images/covers/21.jpg" alt="" decoding="async"><img src="/images/covers/20605.jpg" alt="" decoding="async"><img src="/images/covers/5114.jpg" alt="" decoding="async"><img src="/images/covers/20.jpg" alt="" decoding="async"><img src="/images/covers/20954.jpg" alt="" decoding="async"><img src="/images/covers/11757.jpg" alt="" decoding="async"><img src="/images/covers/21519.jpg" alt="" decoding="async"><img src="/images/covers/127230.jpg" alt="" decoding="async"><img src="/images/covers/101759.jpg" alt="" decoding="async"><img src="/images/covers/20755.jpg" alt="" decoding="async"><img src="/images/covers/21507.jpg" alt="" decoding="async"><img src="/images/covers/21355.jpg" alt="" decoding="async"><img src="/images/covers/20665.jpg" alt="" decoding="async"></div></div>
+      <div class="cover-shade" aria-hidden="true"></div>
+      <div class="gate-inner">
+        <h1 class="gate-title" id="landingTitle"><span class="gl"><span>All those worlds.</span></span><span class="gl"><span><em>Still with you.</em></span></span></h1>
+        <form id="form" class="gate-form" autocomplete="on">
+          <label class="sr-only" for="username">Your AniList username</label>
+          <div class="field"><span class="input-at" aria-hidden="true">@</span><input id="username" name="username" placeholder="Your AniList username" required maxlength="50" autocomplete="username" spellcheck="false"><button id="submit" type="submit" class="enter" aria-label="Open your archive"><span aria-hidden="true">↗</span></button></div>
+          <p id="message" class="message" role="status" aria-live="polite"></p>
+        </form>
+      </div>
+    </section>
+    <div class="loader" id="loader" hidden role="status" aria-live="polite"><div class="loader-mark" aria-hidden="true">✳</div><div class="loader-line" id="loadLine">Opening your archive…</div><div class="loading-track" aria-hidden="true"><i></i></div><button id="cancelLoad" type="button">Cancel</button></div>
+  </section>
+
+  <main id="app"></main>
+</body>
+</html>
