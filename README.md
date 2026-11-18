@@ -1,8 +1,8 @@
 # AniList Wrapped
 
-### Your year in anime and manga, remembered.
-
 [Open the archive](https://anilist-wrapped.spreadsheets600.workers.dev) · [Run locally](#development) · [Data notes](#data-notes)
+
+<img width="1607" height="990" alt="dms_capture_1795006084434" src="https://github.com/user-attachments/assets/b56ac047-5521-4727-bc7c-79c834d75952" />
 
 Enter a public AniList username to revisit your highlights, favourite characters, and the stories that filled your year. No login required.
 
