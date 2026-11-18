@@ -193,11 +193,11 @@ function render(st) {
     const when = new Date(snap.at).toLocaleDateString(undefined, { month: 'long', day: 'numeric' });
     const d = st.all.length - snap.count;
     since = d > 0 ? `+${plural(d, 'NEW FINISH', 'NEW FINISHES')} SINCE YOU WERE LAST HERE · ${when.toUpperCase()}`
-      : d < 0 ? `${d} SINCE ${when.toUpperCase()}` : `NOTHING NEW SINCE ${when.toUpperCase()} — YOUR STORY, SAVED HERE`;
+      : d < 0 ? `${d} SINCE ${when.toUpperCase()}` : `NOTHING NEW SINCE ${when.toUpperCase()} - YOUR STORY, SAVED HERE`;
   }
 
   const S = [];
-  /* 00 — HERO */
+  /* 00 - HERO */
   S.push(`<section class="sec hero" data-ch="ARCHIVE">
     <div class="collage" id="reportCoverWall" aria-hidden="true">${fillCollage.map(c => `<div style="background-image:url('${esc(c)}')"></div>`).join('')}</div>
     <div class="hero-inner">
@@ -210,7 +210,7 @@ function render(st) {
     <div class="scroll-cue mono"><span>SCROLL</span><i></i></div>
   </section>`);
 
-  /* 01 — PROLOGUE */
+  /* 01 - PROLOGUE */
   S.push(`<section class="sec prologue" data-ch="PROLOGUE">
     ${head('01', 'THE PROLOGUE')}
     <p class="statement" data-scrub>${statement(st)}</p>
@@ -222,7 +222,7 @@ function render(st) {
     </div>
   </section>`);
 
-  /* 02 — HIGHLIGHTS */
+  /* 02 - HIGHLIGHTS */
   S.push(`<section class="sec highlights" data-ch="HIGHLIGHTS">
     <div class="ghost-title" aria-hidden="true">YEAR IN REVIEW</div>
     ${head('02', 'HIGHLIGHTS')}
@@ -235,7 +235,7 @@ function render(st) {
           <div><span class="mono">TIME IN OTHER WORLDS</span><strong><span data-count="${st.minutes}">0</span><small>min</small></strong></div>
           <div><span class="mono">COMPLETED</span><strong data-count="${st.a.length}">0</strong></div>
           <div><span class="mono">AVG SCORE</span><strong class="${st.aAvg ? '' : 'unscored'}">${st.aAvg ? st.aAvg.toFixed(1) : 'Not rated yet'}</strong></div>
-          <div class="last"><span class="mono">MOST WATCHED STUDIO</span><strong>${esc(st.studios[0]?.[0] || '—')}</strong></div>
+          <div class="last"><span class="mono">MOST WATCHED STUDIO</span><strong>${esc(st.studios[0]?.[0] || '-')}</strong></div>
         </div>
       </div>
       <div class="hl flip" data-from="right">
@@ -246,14 +246,14 @@ function render(st) {
           <div><span class="mono">CHAPTERS</span><strong><span data-count="${st.chapters}">0</span><small>ch</small></strong></div>
           <div><span class="mono">VOLUMES</span><strong data-count="${st.volumes}">0</strong></div>
           <div><span class="mono">AVG SCORE</span><strong class="${st.mAvg ? '' : 'unscored'}">${st.mAvg ? st.mAvg.toFixed(1) : 'Not rated yet'}</strong></div>
-          <div class="last"><span class="mono">TOP REGION</span><strong>${esc(COUNTRY[st.countries[0]?.[0]] || st.countries[0]?.[0] || '—')}</strong></div>
+          <div class="last"><span class="mono">TOP REGION</span><strong>${esc(COUNTRY[st.countries[0]?.[0]] || st.countries[0]?.[0] || '-')}</strong></div>
         </div>
       </div>
     </div>
     <div class="strip">
       <div data-reveal><strong>${(st.minutes / 1440).toFixed(1)}</strong><span class="mono">DAYS IN OTHER WORLDS</span></div>
       <div data-reveal><strong>${st.avg ? st.avg.toFixed(1) : 'Unrated'}</strong><span class="mono">OVERALL SCORE</span></div>
-      <div data-reveal><strong>${esc(pretty(st.formats[0]?.[0]) || '—')}</strong><span class="mono">TOP FORMAT</span></div>
+      <div data-reveal><strong>${esc(pretty(st.formats[0]?.[0]) || '-')}</strong><span class="mono">TOP FORMAT</span></div>
       <div data-reveal><strong>${fmt(st.rewatches + st.rereads)}</strong><span class="mono">REWATCHES + REREADS</span></div>
     </div>
     ${st.hot ? `<div class="hot" data-reveal><img src="${cov(st.hot.e)}" alt=""><div><span class="mono">YOUR SPICIEST TAKE</span>
@@ -273,7 +273,7 @@ function render(st) {
     <div class="moments-grid">${moments.map((m, i) => `<a class="moment-card" data-reveal href="${esc(safeUrl(m.e.media.siteUrl))}" target="_blank" rel="noreferrer"><div class="moment-image"><img src="${esc(safeUrl(m.e.media.bannerImage) || safeUrl(m.e.media.coverImage?.extraLarge) || safeUrl(m.e.media.coverImage?.large))}" alt="${t(m.e)}" loading="lazy"><span class="moment-no">0${i+1}</span><span class="moment-month mono">${esc(m.detail)}</span></div><span class="mono moment-label">${m.label}</span><h3>${t(m.e)} <span aria-hidden="true">↗</span></h3><p>${esc(m.note)}</p></a>`).join('')}</div>
   </section>`);
 
-  /* 03 — ANATOMY (bento) */
+  /* 03 - ANATOMY (bento) */
   S.push(`<section class="sec anatomy" data-ch="ANATOMY">
     ${head('03', 'ANATOMY OF YOUR TASTE')}
     <h2 class="big" data-words style="margin-bottom:70px">${split('What you')} <em>${split('kept')}</em> ${split('coming back to.')}</h2>
@@ -297,23 +297,23 @@ function render(st) {
       <div class="tile t-format" data-reveal><span class="mono">FORMAT MIX</span>${st.formats.length ? donut(st.formats) : '<p class="mono" style="margin-top:30px">NO DATA YET</p>'}</div>
       <div class="tile t-studio" data-reveal><span class="mono">THE STUDIOS BEHIND IT</span>
         <div class="studios">${st.studios.slice(0, 5).map(([s, n]) => `<div class="studio"><span>${esc(s)}</span><b>${plural(n, 'TITLE')}</b></div>`).join('') || '<p class="mono" style="margin-top:30px">NO ANIME STUDIOS YET</p>'}</div>
-        ${st.binge ? `<p class="mono" style="margin-top:28px;color:var(--gold);letter-spacing:.14em;line-height:1.8">⚡ FASTEST BURN — ${t(st.binge.e).toUpperCase()}: ${plural(st.binge.size, st.binge.e.media.type === 'ANIME' ? 'EPISODE' : 'CHAPTER')} IN ${plural(st.binge.days, 'DAY')}</p>` : ''}
+        ${st.binge ? `<p class="mono" style="margin-top:28px;color:var(--gold);letter-spacing:.14em;line-height:1.8">⚡ FASTEST BURN - ${t(st.binge.e).toUpperCase()}: ${plural(st.binge.size, st.binge.e.media.type === 'ANIME' ? 'EPISODE' : 'CHAPTER')} IN ${plural(st.binge.days, 'DAY')}</p>` : ''}
       </div>
     </div>
   </section>`);
 
-  /* 04 — THE GRIND */
+  /* 04 - THE GRIND */
   if (st.ongoing.length) S.push(`<section class="sec grind" data-ch="THE GRIND">
     <div class="grind-pin">
       <div class="grind-bg" id="grindBg"></div>
-      <div class="grind-head"><div>${head('04', 'IN PROGRESS')}<h2 class="big outline" data-words>${split('The Grind')}</h2></div><p>Ongoing obsessions. The ones you’re still in the middle of — touched this year, not finished yet.</p></div>
+      <div class="grind-head"><div>${head('04', 'IN PROGRESS')}<h2 class="big outline" data-words>${split('The Grind')}</h2></div><p>Ongoing obsessions. The ones you’re still in the middle of - touched this year, not finished yet.</p></div>
       <div class="grind-track" id="grindTrack">${st.ongoing.map(e => `<a class="g-card" href="${esc(safeUrl(e.media.siteUrl))}" target="_blank" rel="noreferrer" data-cover="${cov(e)}" data-cursor="OPEN">
         <div class="cov"><img src="${cov(e, true)}" alt="" loading="lazy"><div class="p"><div><strong>${e.progress || 0}</strong><small>${e.media.type === 'ANIME' ? 'EPISODES' : 'CHAPTERS'}</small></div>${e.score ? `<em>${e.score}</em>` : ''}</div></div>
         <h4>${t(e)}</h4></a>`).join('')}</div>
     </div>
   </section>`);
 
-  /* 05 — THE CAST */
+  /* 05 - THE CAST */
   if (favChars.length) S.push(`<section class="sec cast" data-ch="THE CAST">
     ${head('05', 'FAVOURITES')}
     <h2 class="big" data-words style="margin-bottom:60px">${split('The')} <em>${split('Cast.')}</em></h2>
@@ -321,7 +321,7 @@ function render(st) {
     ${favStaff.length ? `<div class="staff-line"><span class="mono">AND THE PEOPLE BEHIND THEM</span>${favStaff.map(s => `<span>${esc(s.name?.full)}</span>`).join('')}</div>` : ''}
   </section>`);
 
-  /* 06 — TIMELINE */
+  /* 06 - TIMELINE */
   const months = st.monthly.map((x, i) => [x, i]).filter(([x]) => x.length);
   if (months.length) S.push(`<section class="sec timeline" data-ch="TIMELINE">
     ${head('06', 'MONTH BY MONTH')}
@@ -340,7 +340,7 @@ function render(st) {
     }).join('')}
   </section>`);
 
-  /* 07 — THEN & NOW */
+  /* 07 - THEN & NOW */
   S.push(`<section class="sec then" data-ch="THEN & NOW">
     ${head('07', 'THEN & NOW')}
     <div class="vs">
@@ -348,19 +348,19 @@ function render(st) {
       <div class="x">vs</div>
       <div><strong data-count="${st.all.length}">0</strong><span class="mono">${st.year}</span></div>
     </div>
-    <p class="verdict" data-reveal>${st.prev === 0 && st.all.length === 0 ? 'Nothing logged for either year — yet.'
+    <p class="verdict" data-reveal>${st.prev === 0 && st.all.length === 0 ? 'Nothing logged for either year - yet.'
       : diff > 0 ? `<b>${plural(diff, 'more story', 'more stories')}</b> than last year. You’re levelling up.`
       : diff < 0 ? `<b>${plural(-diff, 'fewer')}</b> than last year. Maybe the stories just got longer.`
       : 'The exact same count as last year. Unshakeable.'}</p>
     ${since ? `<div class="since" data-reveal>${esc(since)}</div>` : ''}
   </section>`);
 
-  /* 08 — OUTRO */
+  /* 08 - OUTRO */
   S.push(`<section class="sec outro" data-ch="FIN">
     <div>
       <div class="mono accent" data-fade>FIN.</div>
       <h2 class="big" data-words style="margin-top:30px">${split(`Your ${st.year}.`)}<br><em>${split('Captured.')}</em></h2>
-      <p data-fade>${st.year === THIS_YEAR ? `${esc(st.year)} isn’t over, ${name}. Come back after your next finish — the archive will remember where you left off.` : `Thanks for the memories, ${name}. The archive will be here whenever you want to look back.`}</p>
+      <p data-fade>${st.year === THIS_YEAR ? `${esc(st.year)} isn’t over, ${name}. Come back after your next finish - the archive will remember where you left off.` : `Thanks for the memories, ${name}. The archive will be here whenever you want to look back.`}</p>
       <div class="btns" data-fade><button class="btn solid" id="share" data-cursor="SHARE">SHARE YOUR ARCHIVE ↗</button><button class="btn" id="again" data-cursor="REPLAY">WATCH AGAIN ↑</button></div>
       ${st.snapshot?.cache === 'STALE' ? `<p class="saved-note">A saved archive from ${esc(new Date(st.snapshot.fetchedAt).toLocaleString([], { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }))}. Your latest changes may still be developing.</p>` : ''}
       <div class="foot mono">UNOFFICIAL · DATA FROM ANILIST · MADE FOR FANS</div>
@@ -521,7 +521,7 @@ function openReport() {
 }
 function closeReport() {
   history.replaceState(null, '', location.pathname);
-  document.title = 'AniList Wrapped — The Anime Archive';
+  document.title = 'AniList Wrapped - The Anime Archive';
   el.gate.classList.remove('gone'); el.hud.hidden = true; document.body.classList.add('locked'); lenis?.stop();
   window.dispatchEvent(new CustomEvent('archive:gate', { detail: true }));
   if (G && !REDUCED) G.to(el.gate, { yPercent: 0, duration: 1.2, ease: 'expo.inOut' }); else el.gate.style.transform = '';
@@ -669,7 +669,7 @@ function wireReport(st) {
     const btn = ev.currentTarget, url = new URL(location.href);
     url.search = new URLSearchParams({ username: st.user.name, year: st.year }).toString(); url.hash = '';
     try {
-      if (navigator.share) await navigator.share({ title: `${st.user.name}’s ${st.year} — The Anime Archive`, url: url.href });
+      if (navigator.share) await navigator.share({ title: `${st.user.name}’s ${st.year} - The Anime Archive`, url: url.href });
       else { await navigator.clipboard.writeText(url.href); btn.textContent = 'LINK COPIED ✓'; }
     } catch (err) { if (err?.name !== 'AbortError') prompt('Copy your link:', url.href); }
   });
@@ -680,7 +680,7 @@ function wireReport(st) {
 function show(st) {
   render(st); wireReport(st); remember(st);
   history.replaceState(null, '', `?${new URLSearchParams({ username: st.user.name, year: st.year })}`);
-  document.title = `${st.user.name}’s ${st.year} — The Anime Archive`;
+  document.title = `${st.user.name}’s ${st.year} - The Anime Archive`;
 }
 
 el.form.addEventListener('submit', async e => {

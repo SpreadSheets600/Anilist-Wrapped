@@ -127,7 +127,7 @@ html{scroll-behavior:smooth}
 .scroll-cue i { width: 1px; height: 60px; background: linear-gradient(var(--ink), transparent); transform-origin: top; animation: cue 2.4s var(--ease) infinite; }
 @keyframes cue { 0% { transform: scaleY(0); } 50% { transform: scaleY(1); transform-origin: top; } 51% { transform-origin: bottom; } 100% { transform: scaleY(0); transform-origin: bottom; } }
 
-/* prologue — scrubbed sentence */
+/* prologue - scrubbed sentence */
 .prologue { display: grid; align-content: center; }
 .statement { font: 400 clamp(36px, 5.6vw, 92px)/1.08 var(--display); letter-spacing: -.035em; max-width: 1400px; }
 .statement .wd { opacity: .12; }
@@ -241,7 +241,7 @@ html{scroll-behavior:smooth}
 .studio span { font: 400 clamp(22px, 2.4vw, 36px)/1 var(--display); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .studio b { font: 400 11px var(--mono); color: var(--dim); }
 
-/* grind — horizontal */
+/* grind - horizontal */
 .grind { padding: 0; min-height: auto; }
 .grind-pin { height: 100svh; display: flex; flex-direction: column; justify-content: center; position: relative; overflow: hidden; }
 .grind-bg { position: absolute; inset: -5%; background: #050505 center/cover; opacity: 0; filter: blur(10px) grayscale(.3); transform: scale(1.05); transition: opacity .9s var(--ease), background-image .3s; }

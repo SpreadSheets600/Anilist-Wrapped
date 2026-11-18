@@ -1,4 +1,4 @@
-# AniList Wrapped — The Anime Archive
+# AniList Wrapped - The Anime Archive
 
 A year in anime and manga for public AniList profiles. The landing page keeps one headline and a username field over the React Bits GridMotion cover wall. The recap includes personal milestones, interactive charts, highlights, favourite characters, and a monthly timeline. Fresh visits select the current completion year, or the most recent completion year when the current year has no finishes. Shared links retain their selected year.
 
