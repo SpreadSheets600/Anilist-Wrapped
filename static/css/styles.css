@@ -520,3 +520,22 @@ html{scroll-behavior:smooth}
 .hero .collage .grid-motion__tile { aspect-ratio:auto; filter:none; }
 
 .hero .collage > .grid-motion { aspect-ratio:auto; background:transparent; filter:none; border-radius:0; }
+
+/* Keep phone scrolling free of large animated or filtered compositing layers. */
+@media (max-width: 760px), (hover: none), (pointer: coarse), (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .noise, .glare, .hl-bg, .grind-bg, .month-bg { display: none; }
+  .field, .loader, .card3d .tag, .g-card .p em { backdrop-filter: none; }
+  .field { background: #10160f; }
+  .loader { background: var(--bg); }
+  .hud-chapter, .hud-home { mix-blend-mode: normal; }
+  .statement .wd { opacity: 1; }
+  .month-name { background-position: 0 0; }
+  .scroll-cue i, .unrated-state > span, .loader-mark { animation: none; }
+  .hl img, .c-card img, .moment-image img, .mc img { filter: none; transition: none; transform: none; }
+  .hl:hover img, .c-card:hover img, .moment-card:hover img, .mc:hover img,
+  .g-card:hover .cov { filter: none; transform: none; }
+  .mc .ph { box-shadow: none; }
+  .card3d-wrap { perspective: none; }
+  .card3d { transform-style: flat; }
+}

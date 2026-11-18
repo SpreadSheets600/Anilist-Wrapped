@@ -42,6 +42,10 @@ Sign in with `npx wrangler login` before your first deployment. The Worker name 
 | `server/` | Public AniList queries and caching |
 | `tests/` | API reliability checks |
 
+## Mobile performance
+
+Small screens, touch devices, and reduced-motion preferences use static cover walls with one set of tiles, native scrolling, and final counter values. Animation libraries load only on desktop; phones skip scroll effects, animated noise, and background blur layers. Charts and sharing remain interactive.
+
 ## Data notes
 
 The recap uses recorded completion dates. Fresh visits open the current year, or the latest year with completed titles. Shared links retain their year.

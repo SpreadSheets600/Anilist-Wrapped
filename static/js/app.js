@@ -9,7 +9,8 @@ const el = {
   app: $('#app'), hud: $('#hud'), hudBar: $('#hudProgress'),
   hudNum: $('#hudNum'), hudLabel: $('#hudLabel'), hudHome: $('#hudHome'),
 };
-const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
+// Touch devices and small screens use native scrolling and static artwork.
+const REDUCED = matchMedia('(max-width: 760px), (hover: none), (pointer: coarse), (prefers-reduced-motion: reduce)').matches;
 const FINE = matchMedia('(hover: hover) and (pointer: fine)').matches;
 const G = window.gsap && window.ScrollTrigger ? window.gsap : null;
 if (G) G.registerPlugin(ScrollTrigger);
@@ -182,8 +183,6 @@ function render(st) {
   const u = st.user, name = esc(u.name), p = st.persona;
   const peak = st.monthly.reduce((b, x, i) => x.length > st.monthly[b].length ? i : b, 0);
   const maxM = Math.max(1, ...st.monthly.map(x => x.length)), maxS = Math.max(1, ...st.scoreBins);
-  const collage = (st.covers.length ? st.covers : []).slice(0, 54);
-  const fillCollage = collage.length ? Array.from({ length: 54 }, (_, i) => collage[i % collage.length]) : [];
   const favChars = u.favourites?.characters?.nodes || [], favStaff = u.favourites?.staff?.nodes || [];
   const diff = st.all.length - st.prev;
 
@@ -199,7 +198,7 @@ function render(st) {
   const S = [];
   /* 00 - HERO */
   S.push(`<section class="sec hero" data-ch="ARCHIVE">
-    <div class="collage" id="reportCoverWall" aria-hidden="true">${fillCollage.map(c => `<div style="background-image:url('${esc(c)}')"></div>`).join('')}</div>
+    <div class="collage" id="reportCoverWall" aria-hidden="true"></div>
     <div class="hero-inner">
       ${safeUrl(u.avatar?.large) ? `<img class="avatar" src="${esc(safeUrl(u.avatar.large))}" alt="">` : ''}
       <div class="mono" data-fade>THE ANIME ARCHIVE // ${st.year}</div>
@@ -390,16 +389,15 @@ function splitChars(node) {
 }
 
 function animate() {
-  if (!G) { $$('[data-count]').forEach(n => countUp(n)); return; }
-  ScrollTrigger.getAll().forEach(s => s.kill());
-  mm?.revert(); mm = G.matchMedia();
+  if (G) ScrollTrigger.getAll().forEach(s => s.kill());
+  mm?.revert(); mm = G && !REDUCED ? G.matchMedia() : null;
   cleanups.splice(0).forEach(f => f());
 
-  if (REDUCED) {
+  if (REDUCED || !G) {
     $$('[data-count]').forEach(n => countUp(n));
     $$('.statement .wd').forEach(w => { w.style.opacity = 1; });
     $$('.month-name').forEach(m => { m.style.backgroundPosition = '0 0'; });
-    hudTracking(); return;
+    nativeHudTracking(); return;
   }
 
   const hero = $('.hero');
@@ -479,6 +477,23 @@ function animate() {
   requestAnimationFrame(() => ScrollTrigger.refresh());
 }
 
+// One observer for chapter labels; progress updates only when native scrolling occurs.
+function nativeHudTracking() {
+  const sections=$$('#app > section');
+  const observer=new IntersectionObserver(entries=>{
+    for(const entry of entries) if(entry.isIntersecting){
+      el.hudNum.textContent=String(sections.indexOf(entry.target)).padStart(2,'0');
+      el.hudLabel.textContent=entry.target.dataset.ch;
+    }
+  },{rootMargin:'-45% 0px -45% 0px'});
+  sections.forEach(s=>observer.observe(s));
+  let raf=0;
+  const paint=()=>{raf=0;const max=document.documentElement.scrollHeight-innerHeight;el.hudBar.style.transform=`scaleX(${max>0?Math.min(1,Math.max(0,scrollY/max)):0})`;};
+  const update=()=>{if(!raf)raf=requestAnimationFrame(paint);};
+  window.addEventListener('scroll',update,{passive:true});window.addEventListener('resize',update);paint();
+  cleanups.push(()=>{observer.disconnect();cancelAnimationFrame(raf);window.removeEventListener('scroll',update);window.removeEventListener('resize',update);});
+}
+
 function hudTracking() {
   if (!G) return;
   G.to(el.hudBar, { scaleX: 1, ease: 'none', scrollTrigger: { trigger: el.app, start: 'top top', end: 'bottom bottom', scrub: .3 } });
@@ -520,6 +535,8 @@ function openReport() {
   el.gate.classList.add('gone'); loaderEnd(); window.dispatchEvent(new CustomEvent('archive:gate', { detail: false })); return Promise.resolve();
 }
 function closeReport() {
+  cleanups.splice(0).forEach(f => f());
+  if (G) ScrollTrigger.getAll().forEach(s => s.kill());
   history.replaceState(null, '', location.pathname);
   document.title = 'AniList Wrapped - The Anime Archive';
   el.gate.classList.remove('gone'); el.hud.hidden = true; document.body.classList.add('locked'); lenis?.stop();
@@ -673,7 +690,7 @@ function wireReport(st) {
       else { await navigator.clipboard.writeText(url.href); btn.textContent = 'LINK COPIED ✓'; }
     } catch (err) { if (err?.name !== 'AbortError') prompt('Copy your link:', url.href); }
   });
-  $('#again')?.addEventListener('click', () => lenis ? lenis.scrollTo(0, { duration: 2.4 }) : scrollTo({ top: 0, behavior: 'smooth' }));
+  $('#again')?.addEventListener('click', () => lenis ? lenis.scrollTo(0, { duration: 2.4 }) : scrollTo({ top: 0, behavior: REDUCED ? 'auto' : 'smooth' }));
   wireCharts(st);
 }
 
