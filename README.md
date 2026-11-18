@@ -2,9 +2,15 @@
 
 [Open the archive](https://anilist-wrapped.spreadsheets600.workers.dev) · [Run locally](#development) · [Data notes](#data-notes)
 
-<img width="1607" height="990" alt="dms_capture_1795006084434" src="https://github.com/user-attachments/assets/b56ac047-5521-4727-bc7c-79c834d75952" />
-
 Enter a public AniList username to revisit your highlights, favourite characters, and the stories that filled your year. No login required.
+
+<p align="center">
+  <a href="https://anilist-wrapped.spreadsheets600.workers.dev">
+    <img src="https://github.com/user-attachments/assets/b56ac047-5521-4727-bc7c-79c834d75952" alt="AniList Wrapped homepage with an anime cover wall and a username field to open your archive" width="100%">
+  </a>
+  <br>
+  <sub>Your year in anime and manga, remembered. Click the preview to open the archive.</sub>
+</p>
 
 - An animated cover wall built with React Bits GridMotion.
 - Personal milestones, genre breakdowns, and interactive charts.
