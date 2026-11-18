@@ -83,8 +83,8 @@ html{scroll-behavior:smooth}
 .field input{min-width:0;flex:1;background:none;border:0;outline:0;padding:17px 12px;font:400 13px var(--sans);color:var(--ink)}
 .field input::placeholder{color:#acb7a3}
 .enter{display:grid;place-items:center;width:52px;min-height:50px;border-radius:4px;background:var(--accent);color:#18210e;transition:background .3s}
-.enter>span{display:block;font-size:25px;transition:transform .4s var(--ease)}
-.enter:hover{background:#e3ffbd}.enter:hover>span{transform:translate(2px,-2px)}
+.enter>svg{display:block;width:24px;height:24px;transition:transform .4s var(--ease)}
+.enter:hover{background:#e3ffbd}.enter:hover>svg{transform:translate(2px,-2px)}
 .enter:disabled{opacity:.5;cursor:wait}
 .message{font:400 12px/1.8 var(--sans);color:var(--rose);text-align:center}
 .message:not(:empty){margin-top:16px;padding:12px 16px;background:#080908d9;border:1px solid #ff8a8a30;border-radius:5px}
